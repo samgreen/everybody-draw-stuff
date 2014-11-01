@@ -56,17 +56,24 @@ requirejs([
   var statusElem = document.getElementById("gamestatus");
   var inputElem = document.getElementById("inputarea");
   var colorElem = document.getElementById("display");
+  
+  var paintButtonElem = document.getElementById("paint-button");
+  paintButtonElem.onclick = function (evt) {
+    console.log('Clicked paint!');
+  };
+
+  var calibrateButtonElem = document.getElementById("calibrate-button");
+  calibrateButtonElem.onclick = function (evt) {
+    console.log('Clicked calibrate!');
+  };
+
   var client = new GameClient();
 
   if (window.DeviceOrientationEvent) {
     console.log("DeviceOrientation is supported");
     // Listen for the event and handle DeviceOrientationEvent object
     window.addEventListener('deviceorientation', function (e) {
-      var x = e.alpha;
-      var y = e.beta;
-      var z = e.gamma;
-      sendAccelCmd({ x: x, y:y, z:z });
-      console.log(x + ", " + y + ", " + z);
+      sendAccelCmd({ x: e.alpha, y: e.beta });
     });
   } else {
     console.log("DeviceOrientation UNSUPPORTED!!");
@@ -118,11 +125,11 @@ requirejs([
   colorElem.style.backgroundColor = color;
 
   // Send a message to the game when the screen is touched
-  inputElem.addEventListener('pointermove', function(event) {
-    var position = Input.getRelativeCoordinates(event.target, event);
-    sendMoveCmd(position, event.target);
-    event.preventDefault();
-  });
+  // inputElem.addEventListener('pointermove', function(event) {
+  //   var position = Input.getRelativeCoordinates(event.target, event);
+  //   sendMoveCmd(position, event.target);
+  //   event.preventDefault();
+  // });
 
   // Update our score when the game tells us.
   client.addEventListener('scored', function(cmd) {

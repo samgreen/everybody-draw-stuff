@@ -1,12 +1,12 @@
 {
-  "name": "Everybody Draw Stuff!",
+  "name": "Everybody Paint Stuff!",
   "description": "Cardinal Game Jam 2014 Entry",
   "version": "0.0.1",
   "private": false,
   "dependencies": {
   },
   "happyFunTimes": {
-    "gameId": "everbodydrawstuff",
+    "gameId": "everbodypaintstuff",
     "category": "game",
     "apiVersion": "0.0.0",
     "gameType": "html",
