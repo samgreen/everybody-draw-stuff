@@ -1,5 +1,9 @@
 Player Events
 ====================
 
-`updateBrush`
-`updateColor`
+* `updateColor`
+  * `color` - String
+* `paint`
+  * `position` - Dictionary
+    * `x` - x position
+    * `y` - y position

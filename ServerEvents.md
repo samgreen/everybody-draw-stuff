@@ -1,2 +1,5 @@
 Server Events
 ====================
+
+* `playerconnected`
+* `playerdisconnected`
