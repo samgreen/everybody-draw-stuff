@@ -59,6 +59,23 @@ requirejs([
   var paintButtonElem = document.getElementById("paint-button");
   paintButtonElem.addEventListener('touchstart', sendStartDrawCmd);
   paintButtonElem.addEventListener('touchend', sendStopDrawCmd);
+  paintButtonElem.onpointerdown = function (evt) {
+    sendPaintDownCmd();
+  };
+
+  paintButtonElem.onpointerup = function (evt) {
+    sendPaintUpCmd();
+  };
+
+  paintButtonElem.onclick = function (evt) {
+    sendPaintDownCmd();
+  };
+
+  var calibrateButtonElem = document.getElementById("calibrate-button");
+  calibrateButtonElem.onclick = function (evt) {
+    console.log('Clicked calibrate!');
+  };
+>>>>>>> 2efce076551d3462ec3995e74c1f5b4ee65aaa7f
 
   var client = new GameClient();
 
@@ -99,6 +116,8 @@ requirejs([
   var sendStopDrawCmd = function(target) {
     console.log('stopPaint');
     client.sendCmd('stopPaint', {});
+  var randInt = function(range) {
+    return Math.floor(Math.random() * range);
   };
 
   var sendAccelCmd = function(acceleration) {
@@ -111,6 +130,14 @@ requirejs([
   
   var getRandomColor = function () {
     return 'rgb(' + randInt(256) + "," + randInt(256) + "," + randInt(256) + ")";
+  };
+
+  var sendPaintUpCmd = function() {
+    client.sendCmd('paintup');
+  };
+
+  var sendPaintDownCmd = function() {
+    client.sendCmd('paintdown');
   };
 
   // Send the color to the game.
