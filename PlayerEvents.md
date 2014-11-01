@@ -1,0 +1,5 @@
+Player Events
+====================
+
+`updateBrush`
+`updateColor`
