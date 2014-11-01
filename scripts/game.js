@@ -205,7 +205,7 @@ requirejs([
     for( var i = 0; i < n; i++ )
     {
       var player = players[i];
-
+      
       overlayCtx.strokeStyle = player.color;
       overlayCtx.lineWidth = 2;
       overlayCtx.beginPath();
@@ -219,6 +219,9 @@ requirejs([
     if ( needsRedrawImage )
     {
       exemplarCtx.drawImage(exemplarImage, 0,0, exemplarCanvas.width, exemplarCanvas.height);
+      exemplarCtx.lineWidth = 20.0;
+      exemplarCtx.strokeStyle = "#111";
+      exemplarCtx.strokeRect(0, 0, exemplarCanvas.width, exemplarCanvas.height);
       needsRedrawImage = false;
     }
   };
