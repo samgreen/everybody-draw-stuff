@@ -73,7 +73,8 @@ requirejs([
     console.log("DeviceOrientation is supported");
     // Listen for the event and handle DeviceOrientationEvent object
     window.addEventListener('deviceorientation', function (e) {
-      sendAccelCmd({ x: e.alpha, y: e.beta });
+      // Scale up and send ints
+      sendAccelCmd({ x: parseInt(e.alpha * 100), y: parseInt(e.beta * 100) });
     });
   } else {
     console.log("DeviceOrientation UNSUPPORTED!!");
