@@ -51,7 +51,7 @@ requirejs([
 
   var players = [];
   var globals = {
-    itemSize: 15,
+    sensitivity: 50
   };
   Misc.applyUrlSettings(globals);
 
@@ -82,7 +82,16 @@ requirejs([
     this.name = name;
     this.position = pickRandomPosition();
     this.color = "green";
-    var that = this;
+
+    this.painting = false;
+
+    this.brushRadius = 15.0;
+
+    this.lastDown = false;
+    this.lastScreenX = 0;
+    this.lastScreenY = 0;
+
+    var player = this;
 
     netPlayer.addEventListener('disconnect', Player.prototype.disconnect.bind(this));
     netPlayer.addEventListener('move', Player.prototype.movePlayer.bind(this));
@@ -90,15 +99,53 @@ requirejs([
     netPlayer.addEventListener('setName', function (evt) {
       console.log("Name: " + evt.name);
     });
-    netPlayer.addEventListener('accel', function (evt) {
+    netPlayer.addEventListener('accel', function (evt)
+    {
+      var screenX = evt.x / 100.0;
+      if( screenX > 180.0 )
+        screenX -= 360.0;
+      screenX = ((-screenX / globals.sensitivity) + 0.5) * canvas.clientWidth;
+      var screenY = canvas.clientHeight - (evt.y / 100.0 / globals.sensitivity) * canvas.clientHeight;
 
-      var newX = evt.x / 100.0;
-      if( newX > 180.0 )
-        newX -= 360.0;
-      newX = ((-newX / globals.sensitivity) + 0.5) * canvas.clientWidth;
-      var newY = canvas.clientHeight - (evt.y / 100.0 / globals.sensitivity) * canvas.clientHeight;
+      if (player.painting)
+      {
+        var mx = screenX;
+        var my = screenY;
 
-      drawItem({x:newX, y:newY}, that.color);
+        if( player.lastDown )
+        {
+          mx = player.lastScreenX;
+          my = player.lastScreenY;
+        }
+
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = player.color;
+        ctx.lineWidth = 2.0 * player.brushRadius;
+        ctx.beginPath();
+        ctx.moveTo(mx, my);
+        ctx.lineTo(screenX, screenY);
+        ctx.closePath();
+        ctx.stroke();
+
+        player.lastDown = true;
+        player.lastScreenX = screenX;
+        player.lastScreenY = screenY;
+      }
+      else
+      {
+        player.lastDown = false;
+      }
+    });
+
+    netPlayer.addEventListener('paintdown', function (evt)
+    {
+      player.painting = !player.painting;
+    });
+
+    netPlayer.addEventListener('paintup', function (evt)
+    {
+      player.painting = false;
     });
   };
 
@@ -133,10 +180,6 @@ requirejs([
     this.color = cmd.color;
   };
 
-  Player.prototype.tap = function(cmd) {
-    console.log("tap");
-  };
-
   var server = new GameServer();
   GameSupport.init(server, globals);
 
@@ -147,14 +190,6 @@ requirejs([
   {
     players.push(new Player(netPlayer, name));
   });
-
-  var drawItem = function(position, color)
-  {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(position.x, position.y, globals.itemSize, 0, Math.PI * 2);
-    ctx.fill();
-  };
 
   var render = function()
   {

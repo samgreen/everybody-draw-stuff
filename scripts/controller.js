@@ -58,8 +58,16 @@ requirejs([
   var colorElem = document.getElementById("display");
 
   var paintButtonElem = document.getElementById("paint-button");
+  paintButtonElem.onpointerdown = function (evt) {
+    sendPaintDownCmd();
+  };
+
+  paintButtonElem.onpointerup = function (evt) {
+    sendPaintUpCmd();
+  };
+
   paintButtonElem.onclick = function (evt) {
-    console.log('Clicked paint!');
+    sendPaintDownCmd();
   };
 
   var calibrateButtonElem = document.getElementById("calibrate-button");
@@ -99,17 +107,6 @@ requirejs([
     return Math.floor(Math.random() * range);
   };
 
-  // Sends a move command to the game.
-  //
-  // This will generate a 'move' event in the corresponding
-  // NetPlayer object in the game.
-  var sendMoveCmd = function(position, target) {
-    client.sendCmd('move', {
-      x: position.x / target.clientWidth,
-      y: position.y / target.clientHeight,
-    });
-  };
-
   var sendStartDrawCmd = function(target) {
     client.sendCmd('tap', {
       x: position.x / target.clientWidth,
@@ -119,6 +116,14 @@ requirejs([
 
   var sendAccelCmd = function(acceleration) {
     client.sendCmd('accel', acceleration);
+  };
+
+  var sendPaintUpCmd = function() {
+    client.sendCmd('paintup');
+  };
+
+  var sendPaintDownCmd = function() {
+    client.sendCmd('paintdown');
   };
 
   // Pick a random color
