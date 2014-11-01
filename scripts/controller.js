@@ -48,6 +48,18 @@ requirejs([
 
   var globals = {
     debug: false,
+    colors: [
+      "#1abc9c",
+      "#2ecc71",
+      "#3498db",
+      "#9b59b6",
+      "#34495e",
+      "#f1c40f",
+      "#e67e22",
+      "#e74c3c",
+      "#ecf0f1",
+      "#95a5a6"
+    ]
   };
   Misc.applyUrlSettings(globals);
   MobileHacks.fixHeightHack();
@@ -55,6 +67,7 @@ requirejs([
   var score = 0;
   var statusElem = document.getElementById("gamestatus");
   var colorElem = document.getElementById("display");
+  var colorButtons = document.getElementById("paint-colors").childNodes;
 
   var paintButtonElem = document.getElementById("paint-button");
   paintButtonElem.onpointerdown = function (evt) {
@@ -69,24 +82,15 @@ requirejs([
     sendPaintDownCmd();
   };
 
-  var calibrateButtonElem = document.getElementById("calibrate-button");
-  calibrateButtonElem.onclick = function (evt) {
-    console.log('Clicked calibrate!');
-  };
-
   var client = new GameClient();
 
   if (window.DeviceOrientationEvent) {
     // Listen for the event and handle DeviceOrientationEvent object
     var lastOrientationUpdate = Date.now();
     window.addEventListener('deviceorientation', function (e) {
-      // var now = Date.now();
-      // var diff = now - lastOrientationUpdate;
-      // if (diff < 75) return; // 200ms throttling
 
       // Scale up and send ints
       sendAccelCmd({ x: parseInt(e.alpha * 100), y: parseInt(e.beta * 100) });
-      lastOrientationUpdate = now;
     });
   }
 
@@ -122,7 +126,7 @@ requirejs([
   };
   
   var getRandomColor = function () {
-    return 'rgb(' + randInt(256) + "," + randInt(256) + "," + randInt(256) + ")";
+    return globals.colors[randInt(globals.colors.length)];
   };
 
   // Send the color to the game.
@@ -134,6 +138,6 @@ requirejs([
     // Pick a random color
     color: c,
   });
-  colorElem.style.backgroundColor = c;
+  paintButtonElem.style.backgroundColor = c;
 });
 
