@@ -10,10 +10,35 @@ requirejs([
     'hft/gamesupport',
     'hft/misc/misc',
   ], function(GameServer, GameSupport, Misc) {
+
   var statusElem = document.getElementById("status");
   var canvas = document.getElementById("painting");
   var canvasOverlay = document.getElementById("painting-overlay");
   var exemplarCanvas = document.getElementById("exemplar");
+
+  function resizeWindow()
+  {
+    canvas.width = window.innerWidth / 2;
+    canvas.height = window.innerHeight;
+
+    exemplarCanvas.width = window.innerWidth / 2;
+    exemplarCanvas.height = window.innerHeight;
+
+    needsRedrawImage = true;
+  }
+
+  window.addEventListener("resize", function()
+  {
+    resizeWindow();
+  });
+
+  window.addEventListener("onload", function()
+  {
+    resizeWindow();
+  });
+
+  resizeWindow();
+
   var exemplarImage = document.getElementById("exemplar-image");
 
   var ctx = canvas.getContext("2d");
@@ -59,11 +84,11 @@ requirejs([
     this.name = name;
     this.position = pickRandomPosition();
     this.color = "green";
+    var that = this;
 
     netPlayer.addEventListener('disconnect', Player.prototype.disconnect.bind(this));
     netPlayer.addEventListener('move', Player.prototype.movePlayer.bind(this));
     netPlayer.addEventListener('color', Player.prototype.setColor.bind(this));
-    netPlayer.addEventListener('tap', Player.prototype.tap.bind(this));
     netPlayer.addEventListener('setName', function (evt) {
       console.log("Name: " + evt.name);
     });
@@ -72,10 +97,10 @@ requirejs([
       var newX = evt.x / 100.0;
       if( newX > 180.0 )
         newX -= 360.0;
-      newX = ((-newX / globals.sensitivity) + 0.5) * canvas.width;
-      var newY = 500.0 - (evt.y / 100.0 / globals.sensitivity) * canvas.height;
+      newX = ((-newX / globals.sensitivity) + 0.5) * canvas.clientWidth;
+      var newY = canvas.clientHeight - (evt.y / 100.0 / globals.sensitivity) * canvas.clientHeight;
 
-      drawItem({x:newX, y:newY}, netPlayer.color);
+      drawItem({x:newX, y:newY}, that.color);
     });
   };
 
