@@ -12,7 +12,18 @@ requirejs([
   ], function(GameServer, GameSupport, Misc) {
   var statusElem = document.getElementById("status");
   var canvas = document.getElementById("painting");
+  var exemplarCanvas = document.getElementById("exemplar");
+  var exemplarImage = document.getElementById("exemplar-image");
+
   var ctx = canvas.getContext("2d");
+  var exemplarCtx = exemplarCanvas.getContext("2d");
+
+  exemplarImage.onload = function()
+  {
+    console.log("image onlinad");
+    this.drawImage(exemplarCtx, 0,0);
+  };
+
   var players = [];
   var globals = {
     itemSize: 15,
@@ -110,6 +121,8 @@ requirejs([
 
   var render = function()
   {
+    exemplarCtx.drawImage(exemplarImage, 0,0, 500, 500);
+
     players.forEach(function(player)
     {
       drawItem(player.position, player.color);
