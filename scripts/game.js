@@ -65,7 +65,14 @@ requirejs([
       console.log("Name: " + evt.name);
     });
     netPlayer.addEventListener('accel', function (evt) {
-      console.log("Accel: " + evt.x + ", " + evt.y + ", " + evt.z);
+
+      var newX = evt.x;
+      if( newX > 180.0 )
+        newX -= 360.0;
+      newX = ((-newX / 60.0) + 0.5) * 500.0;
+      var newY = 500.0 - (evt.y / 60.0) * 500.0;
+
+      drawItem({x:newX, y:newY}, netPlayer.color);
     });
   };
 
