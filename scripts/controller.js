@@ -118,11 +118,11 @@ requirejs([
   colorElem.style.backgroundColor = color;
 
   // Send a message to the game when the screen is touched
-  inputElem.addEventListener('pointermove', function(event) {
-    var position = Input.getRelativeCoordinates(event.target, event);
-    sendMoveCmd(position, event.target);
-    event.preventDefault();
-  });
+  // inputElem.addEventListener('pointermove', function(event) {
+  //   var position = Input.getRelativeCoordinates(event.target, event);
+  //   sendMoveCmd(position, event.target);
+  //   event.preventDefault();
+  // });
 
   // Update our score when the game tells us.
   client.addEventListener('scored', function(cmd) {
