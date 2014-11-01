@@ -73,16 +73,12 @@ requirejs([
 
   // Note: CommonUI handles these events for almost all the samples.
   var onConnect = function() {
-    statusElem.innerHTML = "you've connected to happyFunTimes";
+    statusElem.innerHTML = "welcome to everybody draw stuff!";
   };
 
   var onDisconnect = function() {
-    statusElem.innerHTML = "you were disconnected from happyFunTimes";
+    statusElem.innerHTML = "you left the game :(";
   };
-
-  // If I was going to handle this without CommonUI this is what I'd do
-  //client.addEventListener('connect', onConnect);
-  //client.addEventListener('disconnect', onDisconnect);
 
   // Because I want the CommonUI to work
   globals.disconnectFn = onDisconnect;
