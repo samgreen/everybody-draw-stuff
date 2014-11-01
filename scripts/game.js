@@ -135,7 +135,7 @@ requirejs([
   {
     if ( needsRedrawImage )
     {
-      exemplarCtx.drawImage(exemplarImage, 0,0, 500, 500);
+      exemplarCtx.drawImage(exemplarImage, 0,0, exemplarCanvas.width, exemplarCanvas.height);
       needsRedrawImage = false;
     }
   };
