@@ -71,3 +71,23 @@
     font-size: 120%;
     top: 10%;
 }
+#paint-colors {
+    width: 90%;
+    height: 15%;
+    padding: 5px;
+    margin: 0;
+    position: absolute;
+    top: 22%;
+    left: 5%;
+}
+#paint-colors button {
+    width: 45px;
+    position: relative;
+    margin: 3px;
+    height: 45px;
+    font-size: 100%;
+    border-radius: 0px;
+    border: transparent;
+    background: #de2;
+
+}
