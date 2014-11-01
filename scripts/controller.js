@@ -54,30 +54,26 @@ requirejs([
 
   var score = 0;
   var statusElem = document.getElementById("gamestatus");
-  var inputElem = document.getElementById("inputarea");
   var colorElem = document.getElementById("display");
 
   var paintButtonElem = document.getElementById("paint-button");
-  paintButtonElem.onclick = function (evt) {
-    console.log('Clicked paint!');
-  };
-
-  var calibrateButtonElem = document.getElementById("calibrate-button");
-  calibrateButtonElem.onclick = function (evt) {
-    console.log('Clicked calibrate!');
-  };
+  paintButtonElem.addEventListener('touchstart', sendStartDrawCmd);
+  paintButtonElem.addEventListener('touchend', sendStopDrawCmd);
 
   var client = new GameClient();
 
   if (window.DeviceOrientationEvent) {
-    console.log("DeviceOrientation is supported");
     // Listen for the event and handle DeviceOrientationEvent object
+    var lastOrientationUpdate = Date.now();
     window.addEventListener('deviceorientation', function (e) {
+      var now = Date.now();
+      var diff = now - lastOrientationUpdate;
+      if (diff < 75) return; // 200ms throttling
+
       // Scale up and send ints
       sendAccelCmd({ x: parseInt(e.alpha * 100), y: parseInt(e.beta * 100) });
+      lastOrientationUpdate = now;
     });
-  } else {
-    console.log("DeviceOrientation UNSUPPORTED!!");
   }
 
   // Note: CommonUI handles these events for almost all the samples.
@@ -95,48 +91,37 @@ requirejs([
 
   CommonUI.setupStandardControllerUI(client, globals);
 
-  var randInt = function(range) {
-    return Math.floor(Math.random() * range);
-  };
-
-  // Sends a move command to the game.
-  //
-  // This will generate a 'move' event in the corresponding
-  // NetPlayer object in the game.
-  var sendMoveCmd = function(position, target) {
-    client.sendCmd('move', {
-      x: position.x / target.clientWidth,
-      y: position.y / target.clientHeight,
-    });
-  };
-
   var sendStartDrawCmd = function(target) {
-    client.sendCmd('tap', {
-      x: position.x / target.clientWidth,
-      y: position.y / target.clientHeight,
-    });
+    console.log('startPaint');
+    client.sendCmd('startPaint', {});
+  };
+
+  var sendStopDrawCmd = function(target) {
+    console.log('stopPaint');
+    client.sendCmd('stopPaint', {});
   };
 
   var sendAccelCmd = function(acceleration) {
     client.sendCmd('accel', acceleration);
   };
 
-  // Pick a random color
-  var color =  'rgb(' + randInt(256) + "," + randInt(256) + "," + randInt(256) + ")";
+  var randInt = function(range) {
+    return Math.floor(Math.random() * range);
+  };
+  
+  var getRandomColor = function () {
+    return 'rgb(' + randInt(256) + "," + randInt(256) + "," + randInt(256) + ")";
+  };
+
   // Send the color to the game.
   //
   // This will generate a 'color' event in the corresponding
   // NetPlayer object in the game.
   client.sendCmd('color', {
-    color: color,
+    // Pick a random color
+    color: getRandomColor(),
   });
   colorElem.style.backgroundColor = color;
-
-  // Send a message to the game when the screen is touched
-  inputElem.addEventListener('tap', function(event) {
-    sendMoveCmd(event.target);
-    event.preventDefault();
-  });
 
   // Update our score when the game tells us.
   client.addEventListener('scored', function(cmd) {

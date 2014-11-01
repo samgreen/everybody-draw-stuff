@@ -21,6 +21,9 @@ requirejs([
     canvas.width = window.innerWidth / 2;
     canvas.height = window.innerHeight;
 
+    canvasOverlay.width = canvas.width;
+    canvasOverlay.height = canvas.height;
+
     exemplarCanvas.width = window.innerWidth / 2;
     exemplarCanvas.height = window.innerHeight;
 
@@ -53,7 +56,7 @@ requirejs([
 
   var players = [];
   var globals = {
-    itemSize: 15,
+    itemSize: 8,
   };
   Misc.applyUrlSettings(globals);
 
@@ -101,6 +104,12 @@ requirejs([
       var newY = canvas.clientHeight - (evt.y / 100.0 / globals.sensitivity) * canvas.clientHeight;
 
       drawItem({x:newX, y:newY}, that.color);
+    });
+    netPlayer.addEventListener('startPaint', function (evt) {
+      console.log('Start paint!');
+    });
+    netPlayer.addEventListener('stopPaint', function (evt) {
+      console.log('Stop paint!');
     });
   };
 
@@ -160,11 +169,6 @@ requirejs([
 
   var render = function()
   {
-    overlayCtx.fillStyle = '#f0f';
-    overlayCtx.beginPath();
-    overlayCtx.arc(50, 50, 50, 0, Math.PI * 2);
-    overlayCtx.fill();
-
     if ( needsRedrawImage )
     {
       exemplarCtx.drawImage(exemplarImage, 0,0, exemplarCanvas.width, exemplarCanvas.height);
