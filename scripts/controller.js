@@ -56,7 +56,7 @@ requirejs([
   var statusElem = document.getElementById("gamestatus");
   var inputElem = document.getElementById("inputarea");
   var colorElem = document.getElementById("display");
-  
+
   var paintButtonElem = document.getElementById("paint-button");
   paintButtonElem.onclick = function (evt) {
     console.log('Clicked paint!');
@@ -110,6 +110,13 @@ requirejs([
     });
   };
 
+  var sendStartDrawCmd = function(target) {
+    client.sendCmd('tap', {
+      x: position.x / target.clientWidth,
+      y: position.y / target.clientHeight,
+    });
+  };
+
   var sendAccelCmd = function(acceleration) {
     client.sendCmd('accel', acceleration);
   };
@@ -126,11 +133,10 @@ requirejs([
   colorElem.style.backgroundColor = color;
 
   // Send a message to the game when the screen is touched
-  // inputElem.addEventListener('pointermove', function(event) {
-  //   var position = Input.getRelativeCoordinates(event.target, event);
-  //   sendMoveCmd(position, event.target);
-  //   event.preventDefault();
-  // });
+  inputElem.addEventListener('tap', function(event) {
+    sendMoveCmd(event.target);
+    event.preventDefault();
+  });
 
   // Update our score when the game tells us.
   client.addEventListener('scored', function(cmd) {
