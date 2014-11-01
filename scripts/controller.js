@@ -65,6 +65,7 @@ requirejs([
       var x = e.alpha;
       var y = e.beta;
       var z = e.gamma;
+      sendAccelCmd({ x: x, y:y, z:z });
       console.log(x + ", " + y + ", " + z);
     });
   } else {
@@ -99,6 +100,10 @@ requirejs([
       x: position.x / target.clientWidth,
       y: position.y / target.clientHeight,
     });
+  };
+
+  var sendAccelCmd = function(acceleration) {
+    client.sendCmd('accel', acceleration);
   };
 
   // Pick a random color

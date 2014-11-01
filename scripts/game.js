@@ -53,6 +53,9 @@ requirejs([
     netPlayer.addEventListener('setName', function (evt) {
       console.log("Name: " + evt.name);
     });
+    netPlayer.addEventListener('accel', function (evt) {
+      console.log("Accel: " + evt.x + ", " + evt.y + ", " + evt.z);
+    });
   };
 
   // The player disconnected.
