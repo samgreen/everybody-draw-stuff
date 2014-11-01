@@ -56,6 +56,17 @@ requirejs([
   var statusElem = document.getElementById("gamestatus");
   var inputElem = document.getElementById("inputarea");
   var colorElem = document.getElementById("display");
+  
+  var paintButtonElem = document.getElementById("paint-button");
+  paintButtonElem.onclick = function (evt) {
+    console.log('Clicked paint!');
+  };
+
+  var calibrateButtonElem = document.getElementById("calibrate-button");
+  calibrateButtonElem.onclick = function (evt) {
+    console.log('Clicked calibrate!');
+  };
+
   var client = new GameClient();
 
   if (window.DeviceOrientationEvent) {
@@ -66,7 +77,6 @@ requirejs([
       var y = e.beta;
       var z = e.gamma;
       sendAccelCmd({ x: x, y:y, z:z });
-      console.log(x + ", " + y + ", " + z);
     });
   } else {
     console.log("DeviceOrientation UNSUPPORTED!!");
