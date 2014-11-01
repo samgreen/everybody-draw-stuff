@@ -12,10 +12,12 @@ requirejs([
   ], function(GameServer, GameSupport, Misc) {
   var statusElem = document.getElementById("status");
   var canvas = document.getElementById("painting");
+  var canvasOverlay = document.getElementById("painting-overlay");
   var exemplarCanvas = document.getElementById("exemplar");
   var exemplarImage = document.getElementById("exemplar-image");
 
   var ctx = canvas.getContext("2d");
+  var overlayCtx = canvasOverlay.getContext("2d");
   var exemplarCtx = exemplarCanvas.getContext("2d");
   var needsRedrawImage = true;
 
@@ -133,6 +135,11 @@ requirejs([
 
   var render = function()
   {
+    overlayCtx.fillStyle = '#f0f';
+    overlayCtx.beginPath();
+    overlayCtx.arc(50, 50, 50, 0, Math.PI * 2);
+    overlayCtx.fill();
+
     if ( needsRedrawImage )
     {
       exemplarCtx.drawImage(exemplarImage, 0,0, exemplarCanvas.width, exemplarCanvas.height);

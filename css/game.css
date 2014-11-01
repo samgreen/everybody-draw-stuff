@@ -49,4 +49,9 @@ h1 {
     height: 100%;
     float: left;
 }
-
+#painting-overlay {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    left: 50%;
+}
