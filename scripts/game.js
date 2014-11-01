@@ -206,11 +206,8 @@ requirejs([
     {
       var player = players[i];
 
-      overlayCtx.shadowColor = '#f0f';
-      overlayCtx.shadowOffsetX = 1;
-      overlayCtx.shadowOffsetY = 1;
-
-      overlayCtx.strokeStyle = '#f0f';
+      overlayCtx.strokeStyle = player.color;
+      overlayCtx.lineWidth = 2;
       overlayCtx.beginPath();
       overlayCtx.arc(
         player.lastScreenX, player.lastScreenY,
