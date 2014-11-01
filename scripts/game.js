@@ -154,12 +154,6 @@ requirejs([
     {
       player.painting = false;
     });
-    netPlayer.addEventListener('startPaint', function (evt) {
-      console.log('Start paint!');
-    });
-    netPlayer.addEventListener('stopPaint', function (evt) {
-      console.log('Stop paint!');
-    });
   };
 
   // The player disconnected.
@@ -212,7 +206,7 @@ requirejs([
     for( var i = 0; i < n; i++ )
     {
       var player = players[i];
-
+      
       overlayCtx.strokeStyle = '#f0f';
       overlayCtx.beginPath();
       overlayCtx.arc(
@@ -225,6 +219,9 @@ requirejs([
     if ( needsRedrawImage )
     {
       exemplarCtx.drawImage(exemplarImage, 0,0, exemplarCanvas.width, exemplarCanvas.height);
+      exemplarCtx.lineWidth = 20.0;
+      exemplarCtx.strokeStyle = "#111";
+      exemplarCtx.strokeRect(0, 0, exemplarCanvas.width, exemplarCanvas.height);
       needsRedrawImage = false;
     }
   };
