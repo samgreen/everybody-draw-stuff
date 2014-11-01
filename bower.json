@@ -15,6 +15,7 @@
     "tests"
   ],
   "dependencies": {
-    "easeljs": "*"
+    "easeljs": "*",
+    "jquery": "~2.1.1"
   }
 }
