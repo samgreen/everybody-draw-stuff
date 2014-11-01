@@ -60,6 +60,13 @@ requirejs([
 
   if (window.DeviceOrientationEvent) {
     console.log("DeviceOrientation is supported");
+    // Listen for the event and handle DeviceOrientationEvent object
+    window.addEventListener('deviceorientation', function (e) {
+      var x = e.alpha;
+      var y = e.beta;
+      var z = e.gamma;
+      console.log(x + ", " + y + ", " + z);
+    });
   } else {
     console.log("DeviceOrientation UNSUPPORTED!!");
   }
@@ -71,7 +78,7 @@ requirejs([
 
   var onDisconnect = function() {
     statusElem.innerHTML = "you were disconnected from happyFunTimes";
-  }
+  };
 
   // If I was going to handle this without CommonUI this is what I'd do
   //client.addEventListener('connect', onConnect);
