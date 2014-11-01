@@ -69,8 +69,8 @@ requirejs([
       var newX = evt.x;
       if( newX > 180.0 )
         newX -= 360.0;
-      newX = ((-newX / 60.0) + 0.5) * 500.0;
-      var newY = 500.0 - (evt.y / 60.0) * 500.0;
+      newX = ((-newX / 60.0) + 0.5) * canvas.width;
+      var newY = 500.0 - (evt.y / 60.0) * canvas.height;
 
       drawItem({x:newX, y:newY}, netPlayer.color);
     });
@@ -128,7 +128,7 @@ requirejs([
 
   var render = function()
   {
-    exemplarCtx.drawImage(exemplarImage, 0,0, 500, 500);
+    exemplarCtx.drawImage(exemplarImage, 0,0, exemplarCanvas.width, exemplarCanvas.height);
 
     players.forEach(function(player)
     {
