@@ -13,7 +13,7 @@ requirejs([
 
   var statusElem = document.getElementById("status");
   var canvas = document.getElementById("painting");
-  var canvasOverlay = document.getElementById("painting-overlay");
+  var overlayCanvas = document.getElementById("painting-overlay");
   var exemplarCanvas = document.getElementById("exemplar");
 
   function resizeWindow()
@@ -21,8 +21,8 @@ requirejs([
     canvas.width = window.innerWidth / 2;
     canvas.height = window.innerHeight;
 
-    canvasOverlay.width = canvas.width;
-    canvasOverlay.height = canvas.height;
+    overlayCanvas.width = window.innerWidth / 2;
+    overlayCanvas.height = window.innerHeight;
 
     exemplarCanvas.width = window.innerWidth / 2;
     exemplarCanvas.height = window.innerHeight;
@@ -45,7 +45,7 @@ requirejs([
   var exemplarImage = document.getElementById("exemplar-image");
 
   var ctx = canvas.getContext("2d");
-  var overlayCtx = canvasOverlay.getContext("2d");
+  var overlayCtx = overlayCanvas.getContext("2d");
   var exemplarCtx = exemplarCanvas.getContext("2d");
   var needsRedrawImage = true;
 
@@ -135,13 +135,14 @@ requirejs([
         ctx.stroke();
 
         player.lastDown = true;
-        player.lastScreenX = screenX;
-        player.lastScreenY = screenY;
       }
       else
       {
         player.lastDown = false;
       }
+
+      player.lastScreenX = screenX;
+      player.lastScreenY = screenY;
     });
 
     netPlayer.addEventListener('paintdown', function (evt)
@@ -205,6 +206,22 @@ requirejs([
 
   var render = function()
   {
+    overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+
+    var n = players.length;
+    for( var i = 0; i < n; i++ )
+    {
+      var player = players[i];
+
+      overlayCtx.strokeStyle = '#f0f';
+      overlayCtx.beginPath();
+      overlayCtx.arc(
+        player.lastScreenX, player.lastScreenY,
+        player.brushRadius, 0, Math.PI * 2);
+      overlayCtx.closePath();
+      overlayCtx.stroke();
+    }
+
     if ( needsRedrawImage )
     {
       exemplarCtx.drawImage(exemplarImage, 0,0, exemplarCanvas.width, exemplarCanvas.height);
