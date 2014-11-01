@@ -57,8 +57,6 @@ requirejs([
   var colorElem = document.getElementById("display");
 
   var paintButtonElem = document.getElementById("paint-button");
-  paintButtonElem.addEventListener('touchstart', sendStartDrawCmd);
-  paintButtonElem.addEventListener('touchend', sendStopDrawCmd);
   paintButtonElem.onpointerdown = function (evt) {
     sendPaintDownCmd();
   };
@@ -75,7 +73,6 @@ requirejs([
   calibrateButtonElem.onclick = function (evt) {
     console.log('Clicked calibrate!');
   };
->>>>>>> 2efce076551d3462ec3995e74c1f5b4ee65aaa7f
 
   var client = new GameClient();
 
@@ -83,9 +80,9 @@ requirejs([
     // Listen for the event and handle DeviceOrientationEvent object
     var lastOrientationUpdate = Date.now();
     window.addEventListener('deviceorientation', function (e) {
-      var now = Date.now();
-      var diff = now - lastOrientationUpdate;
-      if (diff < 75) return; // 200ms throttling
+      // var now = Date.now();
+      // var diff = now - lastOrientationUpdate;
+      // if (diff < 75) return; // 200ms throttling
 
       // Scale up and send ints
       sendAccelCmd({ x: parseInt(e.alpha * 100), y: parseInt(e.beta * 100) });
@@ -108,28 +105,8 @@ requirejs([
 
   CommonUI.setupStandardControllerUI(client, globals);
 
-  var sendStartDrawCmd = function(target) {
-    console.log('startPaint');
-    client.sendCmd('startPaint', {});
-  };
-
-  var sendStopDrawCmd = function(target) {
-    console.log('stopPaint');
-    client.sendCmd('stopPaint', {});
-  var randInt = function(range) {
-    return Math.floor(Math.random() * range);
-  };
-
   var sendAccelCmd = function(acceleration) {
     client.sendCmd('accel', acceleration);
-  };
-
-  var randInt = function(range) {
-    return Math.floor(Math.random() * range);
-  };
-  
-  var getRandomColor = function () {
-    return 'rgb(' + randInt(256) + "," + randInt(256) + "," + randInt(256) + ")";
   };
 
   var sendPaintUpCmd = function() {
@@ -140,20 +117,23 @@ requirejs([
     client.sendCmd('paintdown');
   };
 
+  var randInt = function(range) {
+    return Math.floor(Math.random() * range);
+  };
+  
+  var getRandomColor = function () {
+    return 'rgb(' + randInt(256) + "," + randInt(256) + "," + randInt(256) + ")";
+  };
+
   // Send the color to the game.
   //
   // This will generate a 'color' event in the corresponding
   // NetPlayer object in the game.
+  var c = getRandomColor();
   client.sendCmd('color', {
     // Pick a random color
-    color: getRandomColor(),
+    color: c,
   });
-  colorElem.style.backgroundColor = color;
-
-  // Update our score when the game tells us.
-  client.addEventListener('scored', function(cmd) {
-    score += cmd.points;
-    statusElem.innerHTML = "You scored: " + cmd.points + " total: " + score;
-  });
+  colorElem.style.backgroundColor = c;
 });
 
