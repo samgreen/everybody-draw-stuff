@@ -1,33 +1,4 @@
-/*
- * Copyright 2014, Gregg Tavares.
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- *     * Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following disclaimer
- * in the documentation and/or other materials provided with the
- * distribution.
- *     * Neither the name of Gregg Tavares. nor the names of its
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+
 "use strict";
 
 // Require will call this with GameServer, GameSupport, and Misc once
@@ -40,7 +11,7 @@ requirejs([
     'hft/misc/misc',
   ], function(GameServer, GameSupport, Misc) {
   var statusElem = document.getElementById("status");
-  var canvas = document.getElementById("playfield");
+  var canvas = document.getElementById("painting");
   var ctx = canvas.getContext("2d");
   var players = [];
   var globals = {
@@ -95,13 +66,16 @@ requirejs([
     }
   };
 
-  Player.prototype.movePlayer = function(cmd) {
+  Player.prototype.movePlayer = function(cmd)
+  {
     this.position.x = Math.floor(cmd.x * canvas.clientWidth);
     this.position.y = Math.floor(cmd.y * canvas.clientHeight);
-    if (goal.hit(this.position)) {
+    if (goal.hit(this.position))
+    {
       // This will generate a 'scored' event on the client (player's smartphone)
       // that corresponds to this player.
-      this.netPlayer.sendCmd('scored', {
+      this.netPlayer.sendCmd('scored',
+      {
         points: 5 + Misc.randInt(6), // 5 to 10 points
       });
       goal.pickGoal();
@@ -118,24 +92,25 @@ requirejs([
   var goal = new Goal();
 
   // A new player has arrived.
-  server.addEventListener('playerconnect', function(netPlayer, name) {
+  server.addEventListener('playerconnect', function(netPlayer, name)
+  {
     players.push(new Player(netPlayer, name));
   });
 
-  var drawItem = function(position, color) {
+  var drawItem = function(position, color)
+  {
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(position.x, position.y, globals.itemSize, 0, Math.PI * 2);
     ctx.fill();
   };
 
-  var render = function() {
-    Misc.resize(canvas);
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    players.forEach(function(player) {
+  var render = function()
+  {
+    players.forEach(function(player)
+    {
       drawItem(player.position, player.color);
     });
-    drawItem(goal.position, (globals.frameCount & 4) ? "red" : "pink");
   };
   GameSupport.run(globals, render);
 });
