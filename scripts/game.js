@@ -239,8 +239,33 @@ requirejs([
     clockCanvasCtx.stroke();
   }
 
+  function drawCountdown(count, portion)
+  {
+    overlayCtx.fillColor = "#0ff";
+    overlayCtx.textAlign = "center";
+    overlayCtx.font = "800 " + parseInt((1.0 - portion) * 1000) + "px 'Dosis'";
+    overlayCtx.textAlign = "center";
+    overlayCtx.fillText("" + count, overlayCanvas.width/2, (1.0 - 0.5 *portion) * overlayCanvas.height);
+  }
+
+  var lastTime = 0;
+  var timeLeft = 60;
+
   var render = function()
   {
+    var now = Date.now();
+    var secondPortion = now - lastTime;
+
+    if( secondPortion > 1000 )
+    {
+        timeLeft--;
+        if( timeLeft < 0 )
+        {
+          timeLeft = 0;
+        }
+        lastTime = now;
+    }
+
     overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
     var n = players.length;
@@ -263,7 +288,7 @@ requirejs([
       overlayCtx.fillText(player.name, player.lastScreenX, player.lastScreenY - 1.4*player.brushRadius);
     }
 
-    if ( needsRedrawImage )
+    if( needsRedrawImage )
     {
       exemplarCtx.drawImage(exemplarImage, 0,0, exemplarCanvas.width, exemplarCanvas.height);
       exemplarCtx.lineWidth = 20.0;
@@ -272,7 +297,11 @@ requirejs([
       needsRedrawImage = false;
     }
 
-    drawClock(exemplarCtx, 0.4);
+    drawClock(exemplarCtx, 1.0 - timeLeft / 60.0);
+    if( timeLeft <= 5 && timeLeft > 0 )
+    {
+      drawCountdown(timeLeft, secondPortion / 1000.0);
+    }
   };
   GameSupport.run(globals, render);
 });
