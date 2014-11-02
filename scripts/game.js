@@ -102,13 +102,20 @@ requirejs([
     var player = this;
 
     netPlayer.addEventListener('disconnect', Player.prototype.disconnect.bind(this));
-    netPlayer.addEventListener('move', Player.prototype.movePlayer.bind(this));
     netPlayer.addEventListener('color', Player.prototype.setColor.bind(this));
+
+    netPlayer.addEventListener('busy', function (evt) {
+      player.busy = evt.busy;
+    });
+
     netPlayer.addEventListener('setName', function (evt) {
       player.name = evt.name;
     });
     netPlayer.addEventListener('accel', function (evt)
     {
+      if( player.busy )
+        return;
+
       var screenX = evt.x / 100.0 - player.centerX;
       if( screenX > 180.0 )
         screenX -= 360.0;
@@ -168,30 +175,23 @@ requirejs([
   };
 
   // The player disconnected.
-  Player.prototype.disconnect = function() {
-    for (var ii = 0; ii < players.length; ++ii) {
+  Player.prototype.disconnect = function()
+  {
+    for (var ii = 0; ii < players.length; ++ii)
+    {
       var player = players[ii];
-      if (player === this) {
+      if (player === this)
+      {
         players.splice(ii, 1);
         return;
       }
     }
   };
 
-  Player.prototype.movePlayer = function(cmd)
+  Player.prototype.handleBusyMsg = function()
   {
-    this.position.x = Math.floor(cmd.x * canvas.clientWidth);
-    this.position.y = Math.floor(cmd.y * canvas.clientHeight);
-    if (goal.hit(this.position))
-    {
-      // This will generate a 'scored' event on the client (player's smartphone)
-      // that corresponds to this player.
-      this.netPlayer.sendCmd('scored',
-      {
-        points: 5 + Misc.randInt(6), // 5 to 10 points
-      });
-      goal.pickGoal();
-    }
+    console.log("handling busy msge");
+    this.painting = false;
   };
 
   Player.prototype.setColor = function(cmd) {
