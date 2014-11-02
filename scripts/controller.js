@@ -132,10 +132,15 @@ requirejs([
     client.sendCmd('paintdown');
   };
 
+  var sendCalibrate = function () {
+    client.sendCmd('calibrate');
+  };
+
+
   var randInt = function(range) {
     return Math.floor(Math.random() * range);
   };
-  
+
   var getRandomColor = function () {
     return globals.colors[randInt(globals.colors.length)];
   };
