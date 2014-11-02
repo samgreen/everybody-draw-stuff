@@ -229,7 +229,7 @@ requirejs([
 
       overlayCtx.lineWidth = 1;
       overlayCtx.textAlign = "center";
-      overlayCtx.font = "'Dosis'; sans-serif";
+      overlayCtx.font = "800 20px 'Dosis'";
       overlayCtx.fillText(player.name, player.lastScreenX, player.lastScreenY - 1.4*player.brushRadius);
     }
 
