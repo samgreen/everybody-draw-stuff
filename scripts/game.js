@@ -69,7 +69,13 @@ requirejs([
   var players = [];
   var globals = {
     sensitivity: 40,
-    timeLimit: 120
+    timeLimit: 120,
+    levels: [
+      "images/smiley.png",
+      "images/cardinalgamejame.jpg",
+      "images/apple.jpg",
+      "images/nyan.png"
+    ]
   };
   Misc.applyUrlSettings(globals);
 
@@ -136,7 +142,6 @@ requirejs([
     netPlayer.addEventListener('disconnect', Player.prototype.disconnect.bind(this));
     netPlayer.addEventListener('color', Player.prototype.setColor.bind(this));
     netPlayer.addEventListener('brushSize', function (evt) {
-      console.dir(evt);
       player.brushRadius = evt.brushSize;
     });
     netPlayer.addEventListener('busy', function (evt) {
