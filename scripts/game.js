@@ -76,6 +76,7 @@ requirejs([
   getNextLevelImage();
 
   var ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = true;
   var overlayCtx = overlayCanvas.getContext("2d");
   var exemplarCtx = exemplarCanvas.getContext("2d");
   var statsCtx = statsCanvas.getContext("2d");
