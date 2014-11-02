@@ -226,6 +226,11 @@ requirejs([
         player.brushRadius, 0, Math.PI * 2);
       overlayCtx.closePath();
       overlayCtx.stroke();
+
+      overlayCtx.lineWidth = 1;
+      overlayCtx.textAlign = "center";
+      overlayCtx.font = "15px sans-serif";
+      overlayCtx.fillText(player.name, player.lastScreenX, player.lastScreenY - 1.4*player.brushRadius);
     }
 
     if ( needsRedrawImage )
