@@ -61,6 +61,30 @@ requirejs([
       "#95a5a6",
       "#bdc3c7",
       "#7f8c8d"
+    ],
+    randomNames: [
+      "Doc",
+      "Dopey",
+      "Sneezy",
+      "Bashful",
+      "Grumpy",
+      "Sneezy",
+      "Sleepy",
+      "Happy",
+      "Sloth",
+      "Greed",
+      "Gluttony",
+      "Lust",
+      "Wrath",
+      "Pride",
+      "Envy",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Febtober",
+      "Can anyone read thsi?!?!",
     ]
   };
   Misc.applyUrlSettings(globals);
@@ -146,5 +170,6 @@ requirejs([
   };
 
   setColor(getRandomColor());
+  client.sendCmd('setName', { name: globals.randomNames[ randInt(globals.randomNames.length) ] } );
 });
 

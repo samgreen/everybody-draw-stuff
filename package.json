@@ -1,15 +1,19 @@
 {
-  "name": "Everybody Paint Stuff!",
+  "name": "EverybodyPaintStuff",
   "description": "Cardinal Game Jam 2014 Entry",
   "version": "0.0.1",
   "private": false,
-  "dependencies": {
-  },
+  "dependencies": {},
   "happyFunTimes": {
     "gameId": "everbodypaintstuff",
     "category": "game",
     "apiVersion": "0.0.0",
     "gameType": "html",
     "minPlayers": 1
+  },
+  "devDependencies": {
+    "bower": "^1.3.12",
+    "grunt": "^0.4.5",
+    "grunt-bower-requirejs": "^1.1.0"
   }
 }
