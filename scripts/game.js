@@ -17,13 +17,13 @@ requirejs([
   var statsCanvas = document.getElementById("stats");
   var splashCanvas = document.getElementById("splash");
 
-
+  var music = document.getElementById("music");
   var currentLevel = 0;
 
   var players = [];
   var globals = {
     sensitivity: 40,
-    timeLimit: 10,
+    timeLimit: 115,
     levels: [
       "images/smiley.png",
       "images/batman.jpg",
@@ -51,6 +51,7 @@ requirejs([
 
     currentLevel++;
     currentLevel = currentLevel % globals.levels.length;
+    music.play();
   };
 
   function resizeWindow()
