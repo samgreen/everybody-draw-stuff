@@ -24,16 +24,19 @@ requirejs([
     sensitivity: 40,
     timeLimit: 120,
     levels: [
-      "images/clean.png",
-      "images/nyan.png",
       "images/smiley.png",
+      "images/batman.jpg",
+      "images/nyan.png",
+      "images/apple.jpg",
+      "images/clean.png",
       "images/cardinalgamejam.jpg",
-      "images/apple.jpg"
     ]
   };
 
   var getNextLevelImage = function()
   {
+    ctx.fillStyle = "#ecf0f1";
+    ctx.fillRect(0,0, canvas.width, canvas.height);
     currentLevel = currentLevel % globals.levels.length;
     exemplarImage.src = globals.levels[currentLevel]
     currentLevel++;
@@ -73,10 +76,11 @@ requirejs([
 
   var exemplarImage = document.getElementById("exemplar-image");
 
-  getNextLevelImage();
-
   var ctx = canvas.getContext("2d");
   ctx.imageSmoothingEnabled = true;
+
+  getNextLevelImage();
+
   var overlayCtx = overlayCanvas.getContext("2d");
   var exemplarCtx = exemplarCanvas.getContext("2d");
   var statsCtx = statsCanvas.getContext("2d");
@@ -254,7 +258,7 @@ requirejs([
     statsCtx.beginPath();
     statsCtx.moveTo(clockRadius,0);
     statsCtx.arc(
-        0, 0, clockRadius, -Math.PI / 2, -Math.PI / 2 + 2.0 * Math.PI);
+        0, 0, clockRadius, 0, 2.0 * Math.PI);
     statsCtx.fill();
 
     statsCtx.fillStyle = "#eee";
@@ -265,17 +269,36 @@ requirejs([
         0, 0, clockRadius, -Math.PI / 2, -Math.PI / 2 + portion * 2.0 * Math.PI);
     statsCtx.fill();
 
+    statsCtx.strokeStyle = "#400";
+    statsCtx.lineWidth = 2;
+    statsCtx.beginPath();
+    statsCtx.moveTo(clockRadius, 0);
+    statsCtx.arc(
+        0, 0, clockRadius, 0, 2.0 * Math.PI);
+    statsCtx.closePath();
+    statsCtx.stroke();
+
     statsCtx.restore();
   }
 
   function drawCountdown(count, portion)
   {
-    splashCtx.clearRect(0,0,splashCanvas.width, splashCanvas.height);
-    splashCtx.fillStyle = "#05f";
+    splashCtx.clearRect(0, 0, splashCanvas.width, splashCanvas.height);
+    splashCtx.fillStyle = "#a11";
     splashCtx.textAlign = "center";
     splashCtx.font = "800 " + parseInt((1.0 - portion) * 1000) + "px 'Dosis'";
     splashCtx.textAlign = "center";
-    splashCtx.fillText("" + count, overlayCanvas.width/2, (1.0 - 0.5 *portion) * overlayCanvas.height);
+
+    if ( portion > 0.95 )
+      return;
+
+    splashCtx.fillText("" + count,
+      overlayCanvas.width/2, (1.0 - 0.5 * portion) * splashCanvas.height);
+
+    splashCtx.lineWidth = 5;
+    splashCtx.fillStyle = "#400";
+    splashCtx.strokeText("" + count,
+      overlayCanvas.width/2, (1.0 - 0.5 * portion) * splashCanvas.height);
   }
 
   function drawBrush(player)
@@ -447,16 +470,18 @@ requirejs([
     var starf1 = (t > 1600);
     var starf2 = (t > 1900);
 
+    accuracy = parseInt(accuracy);
+
     drawStar(-325,-100, starf0 && (accuracy > 0));
-    drawStar(0,-100, starf1 && (accuracy > 5));
-    drawStar(325,-100, starf2 && (accuracy > 10));
+    drawStar(0,-100, starf1 && (accuracy > 10));
+    drawStar(325,-100, starf2 && (accuracy > 20));
 
     if( starf2 )
     {
       splashCtx.fillStyle = "#000";
       splashCtx.font = "150px 'Dosis'";
       splashCtx.textAlign = "center";
-      splashCtx.fillText("Accuracy : " + parseInt(accuracy) + "%", 0,200);
+      splashCtx.fillText("Accuracy : " + accuracy + "%", 0,200);
     }
 
     splashCtx.restore();
@@ -465,7 +490,6 @@ requirejs([
     {
       rewardScreen = false;
       timeLeft = globals.timeLimit;
-      ctx.clearRect(0,0, canvas.width, canvas.height);
       getNextLevelImage();
     }
 

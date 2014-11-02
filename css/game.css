@@ -13,6 +13,8 @@ h1 {
     height: 80%;
     position: absolute;
     top: 20%;
+    border-style: solid;
+    border-width: 1px;
 }
 #painting {
     width: 50%;
@@ -20,6 +22,8 @@ h1 {
     position: absolute;
     top: 20%;
     right: 0%;
+    border-style: solid;
+    border-width: 1px;
 }
 #painting-overlay {
     width: 50%;
@@ -27,6 +31,8 @@ h1 {
     position: absolute;
     top: 20%;
     left: 50%;
+    border-style: solid;
+    border-width: 1px;
 }
 #splash {
     width: 100%;
