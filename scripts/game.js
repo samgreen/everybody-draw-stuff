@@ -131,7 +131,6 @@ requirejs([
     netPlayer.addEventListener('disconnect', Player.prototype.disconnect.bind(this));
     netPlayer.addEventListener('color', Player.prototype.setColor.bind(this));
     netPlayer.addEventListener('brushSize', function (evt) {
-      console.dir(evt);
       player.brushRadius = evt.brushSize;
     });
     netPlayer.addEventListener('busy', function (evt) {
