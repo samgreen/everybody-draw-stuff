@@ -50,6 +50,10 @@ requirejs([
   var ctx = canvas.getContext("2d");
   var overlayCtx = overlayCanvas.getContext("2d");
   var exemplarCtx = exemplarCanvas.getContext("2d");
+  var statsCtx = statsCanvas.getContext("2d");
+
+  var statsCanvas;
+
   var needsRedrawImage = true;
 
   exemplarImage.onload = function()
@@ -227,33 +231,31 @@ requirejs([
   });
 
 
-  function drawClock(clockCanvasCtx, portion)
+  function drawClock(portion)
   {
-    clockCanvasCtx.fillStyle = "#0ff";
+    statsCtx.fillStyle = "#0ff";
 
-    clockCanvasCtx.beginPath();
-    clockCanvasCtx.moveTo(100,0);
-    clockCanvasCtx.arc(
-        100, 100, 100, -Math.PI / 2, -Math.PI / 2 + 2.0 * Math.PI);
-    clockCanvasCtx.fill();
+    var clockRadius = statsCanvas.height * 0.45;
 
-    clockCanvasCtx.fillStyle = "#00f";
+    statsCtx.save();
+    statsCtx.translate(statsCanvas.width / 2, statsCanvas.height / 2);
 
-    clockCanvasCtx.beginPath();
-    clockCanvasCtx.moveTo(100,100);
-    clockCanvasCtx.lineTo(100,0);
-    clockCanvasCtx.arc(
-        100, 100, 100, -Math.PI / 2, -Math.PI / 2 + portion * 2.0 * Math.PI);
-    clockCanvasCtx.fill();
+    statsCtx.fillStyle = "#0ff";
+    statsCtx.beginPath();
+    statsCtx.moveTo(clockRadius,0);
+    statsCtx.arc(
+        0, 0, clockRadius, -Math.PI / 2, -Math.PI / 2 + 2.0 * Math.PI);
+    statsCtx.fill();
 
-    clockCanvasCtx.fillStyle = "#00f";
+    statsCtx.fillStyle = "#00f";
+    statsCtx.beginPath();
+    statsCtx.moveTo(0,0);
+    statsCtx.lineTo(0,clockRadius);
+    statsCtx.arc(
+        0, 0, clockRadius * 1.01, -Math.PI / 2, -Math.PI / 2 + portion * 2.0 * Math.PI);
+    statsCtx.fill();
 
-    clockCanvasCtx.strokeStyle = "#000";
-    clockCanvasCtx.beginPath();
-    clockCanvasCtx.moveTo(100,0);
-    clockCanvasCtx.arc(
-        100, 100, 100, -Math.PI / 2, -Math.PI / 2 + 2.0 * Math.PI);
-    clockCanvasCtx.stroke();
+    statsCtx.restore();
   }
 
   function drawCountdown(count, portion)
@@ -283,7 +285,7 @@ requirejs([
   }
 
   var lastTime = 0;
-  var timeLeft = 10;
+  var timeLeft = 20;
 
   var render = function()
   {
@@ -326,7 +328,7 @@ requirejs([
       needsRedrawImage = false;
     }
 
-    drawClock(exemplarCtx, 1.0 - timeLeft / 60.0);
+    drawClock(1.0 - timeLeft / 60.0);
     if( timeLeft <= 5 && timeLeft > 0 )
     {
       drawCountdown(timeLeft, secondPortion / 1000.0);
@@ -396,7 +398,7 @@ URL: https://github.com/Huddle/Resemble.js
     var errorPixelTransformer = errorPixelTransform.flat;
 
     var largeImageThreshold = 1200;
-    
+
     var httpRegex = /^https?:\/\//;
     var documentDomainRegex = new RegExp('^https?://' + document.domain);
 
@@ -472,7 +474,7 @@ URL: https://github.com/Huddle/Resemble.js
         function loadImageData( fileData, callback ){
             var fileReader;
             var hiddenImage = new Image();
-            
+
             if (httpRegex.test(fileData) && !documentDomainRegex.test(fileData)) {
                 hiddenImage.setAttribute('crossorigin', 'anonymous');
             }
