@@ -17,6 +17,27 @@ requirejs([
   var statsCanvas = document.getElementById("stats");
   var splashCanvas = document.getElementById("splash");
 
+  var currentLevel = 0;
+
+  var players = [];
+  var globals = {
+    sensitivity: 40,
+    timeLimit: 120,
+    levels: [
+      "images/smiley.png",
+      "images/cardinalgamejam.jpg",
+      "images/apple.jpg",
+      "images/nyan.png"
+    ]
+  };
+
+  var getNextLevelImage = function()
+  {
+    currentLevel = currentLevel % globals.levels.length;
+    exemplarImage.src = globals.levels[currentLevel]
+    currentLevel++;
+  };
+
   function resizeWindow()
   {
     canvas.width = window.innerWidth / 2;
@@ -51,6 +72,8 @@ requirejs([
 
   var exemplarImage = document.getElementById("exemplar-image");
 
+  getNextLevelImage();
+
   var ctx = canvas.getContext("2d");
   var overlayCtx = overlayCanvas.getContext("2d");
   var exemplarCtx = exemplarCanvas.getContext("2d");
@@ -66,17 +89,6 @@ requirejs([
     needsRedrawImage = true;
   };
 
-  var players = [];
-  var globals = {
-    sensitivity: 40,
-    timeLimit: 120,
-    levels: [
-      "images/smiley.png",
-      "images/cardinalgamejame.jpg",
-      "images/apple.jpg",
-      "images/nyan.png"
-    ]
-  };
   Misc.applyUrlSettings(globals);
 
   var pickRandomPosition = function() {
@@ -85,6 +97,7 @@ requirejs([
       y: 30 + Misc.randInt(canvas.height - 60),
     };
   };
+
 
   var accuracy = 0;
 
@@ -101,7 +114,7 @@ requirejs([
       callback(d);
     });
     diff.ignoreAntialiasing();
-    diff.ignoreColors();
+    //diff.ignoreColors();
   };
   // setInterval(compareImages, 30000);
 
@@ -269,7 +282,7 @@ requirejs([
     statsCtx.moveTo(0,0);
     statsCtx.lineTo(0,clockRadius);
     statsCtx.arc(
-        0, 0, clockRadius * 1.01, -Math.PI / 2, -Math.PI / 2 + portion * 2.0 * Math.PI);
+        0, 0, clockRadius, -Math.PI / 2, -Math.PI / 2 + portion * 2.0 * Math.PI);
     statsCtx.fill();
 
     statsCtx.restore();
@@ -452,9 +465,9 @@ requirejs([
     var starf1 = (t > 1600);
     var starf2 = (t > 1900);
 
-    drawStar(-325,-100, starf0);
-    drawStar(0,-100, starf1);
-    drawStar(325,-100, starf2);
+    drawStar(-325,-100, starf0 && (accuracy > 0));
+    drawStar(0,-100, starf1 && (accuracy > 5));
+    drawStar(325,-100, starf2 && (accuracy > 10));
 
     if( starf2 )
     {
@@ -465,6 +478,15 @@ requirejs([
     }
 
     splashCtx.restore();
+
+    if( t > 6000 )
+    {
+      rewardScreen = false;
+      timeLeft = globals.timeLimit;
+      ctx.clearRect(0,0, canvas.width, canvas.height);
+      getNextLevelImage();
+    }
+
 
   }
 
