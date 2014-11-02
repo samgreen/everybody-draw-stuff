@@ -56,7 +56,7 @@ requirejs([
 
   var players = [];
   var globals = {
-    sensitivity: 50
+    sensitivity: 40
   };
   Misc.applyUrlSettings(globals);
 
@@ -96,6 +96,9 @@ requirejs([
     this.lastScreenX = 0;
     this.lastScreenY = 0;
 
+    this.lastEvtX = 0;
+    this.centerX = 0;
+
     var player = this;
 
     netPlayer.addEventListener('disconnect', Player.prototype.disconnect.bind(this));
@@ -106,11 +109,20 @@ requirejs([
     });
     netPlayer.addEventListener('accel', function (evt)
     {
-      var screenX = evt.x / 100.0;
+      var screenX = evt.x / 100.0 - player.centerX;
       if( screenX > 180.0 )
         screenX -= 360.0;
-      screenX = ((-screenX / globals.sensitivity) + 0.5) * canvas.clientWidth;
+      var xCoef = ((-screenX / globals.sensitivity) + 0.5);
+      screenX = xCoef * canvas.clientWidth;
       var screenY = canvas.clientHeight - (evt.y / 100.0 / globals.sensitivity) * canvas.clientHeight;
+
+      if( xCoef < -0.1 )
+        player.centerX += 10.0;
+
+      if( xCoef > 1.1 )
+        player.centerX -= 10.0;
+
+      player.lastEvtX = evt.x;
 
       if (player.painting)
       {
@@ -205,7 +217,7 @@ requirejs([
     for( var i = 0; i < n; i++ )
     {
       var player = players[i];
-      
+
       overlayCtx.strokeStyle = player.color;
       overlayCtx.lineWidth = 2;
       overlayCtx.beginPath();
