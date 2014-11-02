@@ -222,8 +222,80 @@ requirejs([
     players.push(new Player(netPlayer, name));
   });
 
+
+  function drawClock(clockCanvasCtx, portion)
+  {
+    clockCanvasCtx.fillStyle = "#0ff";
+
+    clockCanvasCtx.beginPath();
+    clockCanvasCtx.moveTo(100,0);
+    clockCanvasCtx.arc(
+        100, 100, 100, -Math.PI / 2, -Math.PI / 2 + 2.0 * Math.PI);
+    clockCanvasCtx.fill();
+
+    clockCanvasCtx.fillStyle = "#00f";
+
+    clockCanvasCtx.beginPath();
+    clockCanvasCtx.moveTo(100,100);
+    clockCanvasCtx.lineTo(100,0);
+    clockCanvasCtx.arc(
+        100, 100, 100, -Math.PI / 2, -Math.PI / 2 + portion * 2.0 * Math.PI);
+    clockCanvasCtx.fill();
+
+    clockCanvasCtx.fillStyle = "#00f";
+
+    clockCanvasCtx.strokeStyle = "#000";
+    clockCanvasCtx.beginPath();
+    clockCanvasCtx.moveTo(100,0);
+    clockCanvasCtx.arc(
+        100, 100, 100, -Math.PI / 2, -Math.PI / 2 + 2.0 * Math.PI);
+    clockCanvasCtx.stroke();
+  }
+
+  function drawCountdown(count, portion)
+  {
+    overlayCtx.fillStyle = "#05f";
+    overlayCtx.textAlign = "center";
+    overlayCtx.font = "800 " + parseInt((1.0 - portion) * 1000) + "px 'Dosis'";
+    overlayCtx.textAlign = "center";
+    overlayCtx.fillText("" + count, overlayCanvas.width/2, (1.0 - 0.5 *portion) * overlayCanvas.height);
+  }
+
+  function drawBrush(player)
+  {
+      var n = 8;
+      for( var i = 0; i < n; i++ )
+      {
+        overlayCtx.strokeStyle = ["#000", "#fff"][i % 2];
+
+        overlayCtx.lineWidth = 1;
+        overlayCtx.beginPath();
+
+        overlayCtx.arc(
+          player.lastScreenX, player.lastScreenY,
+          player.brushRadius, 2 * Math.PI * (i-0.5) / n, 2 * Math.PI * (i+0.5) / n);
+        overlayCtx.stroke();
+      }
+  }
+
+  var lastTime = 0;
+  var timeLeft = 10;
+
   var render = function()
   {
+    var now = Date.now();
+    var secondPortion = now - lastTime;
+
+    if( secondPortion > 1000 )
+    {
+        timeLeft--;
+        if( timeLeft < 0 )
+        {
+          timeLeft = 0;
+        }
+        lastTime = now;
+    }
+
     overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
     var n = players.length;
@@ -231,22 +303,16 @@ requirejs([
     {
       var player = players[i];
 
-      overlayCtx.strokeStyle = player.color;
-      overlayCtx.lineWidth = 2;
-      overlayCtx.beginPath();
-      overlayCtx.arc(
-        player.lastScreenX, player.lastScreenY,
-        player.brushRadius, 0, Math.PI * 2);
-      overlayCtx.closePath();
-      overlayCtx.stroke();
+      drawBrush(player);
 
+      overlayCtx.fillStyle = "#000";
       overlayCtx.lineWidth = 1;
       overlayCtx.textAlign = "center";
       overlayCtx.font = "800 20px 'Dosis'";
       overlayCtx.fillText(player.name, player.lastScreenX, player.lastScreenY - 1.4*player.brushRadius);
     }
 
-    if ( needsRedrawImage )
+    if( needsRedrawImage )
     {
       exemplarCtx.drawImage(exemplarImage, 0,0, exemplarCanvas.width, exemplarCanvas.height);
       exemplarCtx.lineWidth = 20.0;
@@ -254,6 +320,12 @@ requirejs([
       exemplarCtx.strokeRect(0, 0, exemplarCanvas.width, exemplarCanvas.height);
       // ctx.drawImage(exemplarImage, 0,0, exemplarCanvas.width, exemplarCanvas.height);
       needsRedrawImage = false;
+    }
+
+    drawClock(exemplarCtx, 1.0 - timeLeft / 60.0);
+    if( timeLeft <= 5 && timeLeft > 0 )
+    {
+      drawCountdown(timeLeft, secondPortion / 1000.0);
     }
   };
   GameSupport.run(globals, render);
