@@ -98,6 +98,7 @@ requirejs([
   var colorElem = document.getElementById("display");
 
   var paintButtonElem = document.getElementById("paint-button");
+  FastClick.attach(paintButtonElem);
   paintButtonElem.onclick = function (evt) {
     painting = !painting;
     paintButtonElem.innerHTML = painting ? 'Stop!' : 'Paint!';
@@ -108,18 +109,22 @@ requirejs([
   var colorButtons = document.getElementById("paint-colors").childNodes
   for (var i = colorButtons.length - 1; i >= 0; i--) {
     var buttonElem = colorButtons[i];
+    FastClick.attach(buttonElem);
     buttonElem.onclick = function () {
       setColor(this.style.backgroundColor);
     };
   };
 
 
+  FastClick.attach(document.getElementById("increase-brush-size"));
   document.getElementById("increase-brush-size").onclick = function (evt) {
     brushSizeIndex += 1;
     if (brushSizeIndex >= brushSizes.length) brushSizeIndex = 0;
 
     client.sendCmd('brushSize', { brushSize: brushSizes[brushSizeIndex] });
   };
+
+  FastClick.attach(document.getElementById("decrease-brush-size"));
   document.getElementById("decrease-brush-size").onclick = function (evt) {
     brushSizeIndex -= 1;
     if (brushSizeIndex < 0) brushSizeIndex = brushSizes.length - 1;
