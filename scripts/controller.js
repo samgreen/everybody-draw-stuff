@@ -99,12 +99,12 @@ requirejs([
 
   var paintButtonElem = document.getElementById("paint-button");
   FastClick.attach(paintButtonElem);
-  paintButtonElem.onclick = function (evt) {
-    painting = !painting;
-    paintButtonElem.innerHTML = painting ? 'Stop!' : 'Paint!';
-    paintButtonElem.style.opacity = painting ? '0.33' : '1.0';
+  paintButtonElem.addEventListener('touchstart', function (evt) {
     sendPaintDownCmd();
-  };
+  });
+  paintButtonElem.addEventListener('touchend', function (evt) {
+    sendPaintUpCmd();
+  });
 
   var colorButtons = document.getElementById("paint-colors").childNodes
   for (var i = colorButtons.length - 1; i > 0; i--) {
@@ -164,10 +164,14 @@ requirejs([
   };
 
   var sendPaintUpCmd = function() {
+    paintButtonElem.innerHTML = 'Paint!';
+    paintButtonElem.style.opacity = '1.0';
     client.sendCmd('paintup');
   };
 
   var sendPaintDownCmd = function() {
+    paintButtonElem.innerHTML = 'Stop!';
+    paintButtonElem.style.opacity = '0.33';
     client.sendCmd('paintdown');
   };
 
