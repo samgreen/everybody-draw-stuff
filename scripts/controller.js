@@ -100,7 +100,7 @@ requirejs([
 
   // Note: CommonUI handles these events for almost all the samples.
   var onConnect = function() {
-    statusElem.innerHTML = "welcome to everybody draw stuff!";
+    statusElem.innerHTML = "EVERYBODY PAINT STUFF!";
   };
 
   var onDisconnect = function() {

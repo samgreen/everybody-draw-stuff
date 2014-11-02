@@ -105,7 +105,7 @@ requirejs([
     netPlayer.addEventListener('move', Player.prototype.movePlayer.bind(this));
     netPlayer.addEventListener('color', Player.prototype.setColor.bind(this));
     netPlayer.addEventListener('setName', function (evt) {
-      console.log("Name: " + evt.name);
+      player.name = evt.name;
     });
     netPlayer.addEventListener('accel', function (evt)
     {
@@ -229,7 +229,7 @@ requirejs([
 
       overlayCtx.lineWidth = 1;
       overlayCtx.textAlign = "center";
-      overlayCtx.font = "15px sans-serif";
+      overlayCtx.font = "'Dosis'; sans-serif";
       overlayCtx.fillText(player.name, player.lastScreenX, player.lastScreenY - 1.4*player.brushRadius);
     }
 
