@@ -14,17 +14,21 @@ requirejs([
   var canvas = document.getElementById("painting");
   var overlayCanvas = document.getElementById("painting-overlay");
   var exemplarCanvas = document.getElementById("exemplar");
+  var statsCanvas = document.getElementById("stats");
 
   function resizeWindow()
   {
     canvas.width = window.innerWidth / 2;
-    canvas.height = window.innerHeight;
+    canvas.height = window.innerHeight * 0.8;
+
+    statsCanvas.width = window.innerWidth;
+    statsCanvas.height = window.innerHeight * 0.2;
 
     overlayCanvas.width = window.innerWidth / 2;
-    overlayCanvas.height = window.innerHeight;
+    overlayCanvas.height = window.innerHeight * 0.8;
 
     exemplarCanvas.width = window.innerWidth / 2;
-    exemplarCanvas.height = window.innerHeight;
+    exemplarCanvas.height = window.innerHeight * 0.8;
 
     needsRedrawImage = true;
   }
@@ -315,9 +319,9 @@ requirejs([
     if( needsRedrawImage )
     {
       exemplarCtx.drawImage(exemplarImage, 0,0, exemplarCanvas.width, exemplarCanvas.height);
-      exemplarCtx.lineWidth = 20.0;
-      exemplarCtx.strokeStyle = "#111";
-      exemplarCtx.strokeRect(0, 0, exemplarCanvas.width, exemplarCanvas.height);
+      // exemplarCtx.lineWidth = 20.0;
+      // exemplarCtx.strokeStyle = "#111";
+      // exemplarCtx.strokeRect(0, 0, exemplarCanvas.width, exemplarCanvas.height);
       // ctx.drawImage(exemplarImage, 0,0, exemplarCanvas.width, exemplarCanvas.height);
       needsRedrawImage = false;
     }

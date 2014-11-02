@@ -10,17 +10,29 @@ h1 {
 }
 #exemplar {
     width: 50%;
-    height: 100%;
-    float: left;
+    height: 80%;
+    position: absolute;
+    top: 20%;
 }
 #painting {
     width: 50%;
-    height: 100%;
-    float: left;
+    height: 80%;
+    position: absolute;
+    top: 20%;
+    right: 0%;
 }
 #painting-overlay {
     width: 50%;
-    height: 100%;
+    height: 80%;
     position: absolute;
+    top: 20%;
     left: 50%;
+}
+#stats {
+    width: 100%;
+    height: 20%;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    background-color: #1d1d1d;
 }
