@@ -28,6 +28,13 @@ h1 {
     top: 20%;
     left: 50%;
 }
+#splash {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+}
 #stats {
     width: 100%;
     height: 20%;

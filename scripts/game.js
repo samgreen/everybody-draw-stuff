@@ -15,6 +15,7 @@ requirejs([
   var overlayCanvas = document.getElementById("painting-overlay");
   var exemplarCanvas = document.getElementById("exemplar");
   var statsCanvas = document.getElementById("stats");
+  var splashCanvas = document.getElementById("splash");
 
   function resizeWindow()
   {
@@ -29,6 +30,9 @@ requirejs([
 
     exemplarCanvas.width = window.innerWidth / 2;
     exemplarCanvas.height = window.innerHeight * 0.8;
+
+    splashCanvas.width = window.innerWidth;
+    splashCanvas.height = window.innerHeight;
 
     needsRedrawImage = true;
   }
@@ -51,6 +55,7 @@ requirejs([
   var overlayCtx = overlayCanvas.getContext("2d");
   var exemplarCtx = exemplarCanvas.getContext("2d");
   var statsCtx = statsCanvas.getContext("2d");
+  var splashCtx = splashCanvas.getContext("2d");
 
   var statsCanvas;
 
@@ -64,6 +69,7 @@ requirejs([
   var players = [];
   var globals = {
     sensitivity: 40,
+    timeLimit: 120,
     levels: [
       "images/smiley.png",
       "images/cardinalgamejame.jpg",
@@ -80,14 +86,19 @@ requirejs([
     };
   };
 
-  var compareImages = function () {
+  var accuracy = 0;
+
+  var compareImages = function (callback) {
     var diff = resemble(canvas.toDataURL()).compareTo(exemplarCanvas.toDataURL()).onComplete(function(d){
-      console.log("Mismatch: " + d["misMatchPercentage"]);
+      //console.log("Mismatch: " + d["misMatchPercentage"]);
+
+      accuracy  = 100 - d["misMatchPercentage"];
 
       var diffImg = new Image();
-      diffImg.src = d.getImageDataUrl();
-      document.body.appendChild(diffImg);
-      return d;
+      //diffImg.src = d.getImageDataUrl();
+      //document.body.appendChild(diffImg);
+
+      callback(d);
     });
     diff.ignoreAntialiasing();
     diff.ignoreColors();
@@ -241,21 +252,19 @@ requirejs([
 
   function drawClock(portion)
   {
-    statsCtx.fillStyle = "#0ff";
-
-    var clockRadius = statsCanvas.height * 0.45;
+    var clockRadius = statsCanvas.height * 0.35;
 
     statsCtx.save();
     statsCtx.translate(statsCanvas.width / 2, statsCanvas.height / 2);
 
-    statsCtx.fillStyle = "#0ff";
+    statsCtx.fillStyle = "#a11";
     statsCtx.beginPath();
     statsCtx.moveTo(clockRadius,0);
     statsCtx.arc(
         0, 0, clockRadius, -Math.PI / 2, -Math.PI / 2 + 2.0 * Math.PI);
     statsCtx.fill();
 
-    statsCtx.fillStyle = "#00f";
+    statsCtx.fillStyle = "#eee";
     statsCtx.beginPath();
     statsCtx.moveTo(0,0);
     statsCtx.lineTo(0,clockRadius);
@@ -293,18 +302,36 @@ requirejs([
   }
 
   var lastTime = 0;
-  var timeLeft = 20;
+  var timeLeft = globals.timeLimit;
+
+  var rewardScreen = false;
+  var rewardScreenTime0 = 0;
+
+  var startRewardScreen = function()
+  {
+    compareImages(function() {
+      rewardScreen = true;
+      rewardScreenTime0 = Date.now();
+    });
+  }
 
   var render = function()
   {
+    if( rewardScreen )
+    {
+      renderRewardScreen();
+      return;
+    }
+
     var now = Date.now();
     var secondPortion = now - lastTime;
 
     if( secondPortion > 1000 )
     {
         timeLeft--;
-        if( timeLeft < 0 )
+        if( timeLeft <= 0 )
         {
+          startRewardScreen();
           timeLeft = 0;
         }
         lastTime = now;
@@ -322,7 +349,7 @@ requirejs([
       overlayCtx.fillStyle = "#000";
       overlayCtx.lineWidth = 1;
       overlayCtx.textAlign = "center";
-      overlayCtx.font = "800 20px 'Dosis'";
+      overlayCtx.font = "800 25px 'Dosis'";
       overlayCtx.fillText(player.name, player.lastScreenX, player.lastScreenY - 1.4*player.brushRadius);
     }
 
@@ -336,12 +363,111 @@ requirejs([
       needsRedrawImage = false;
     }
 
-    drawClock(1.0 - timeLeft / 60.0);
+    drawClock(1.0 - timeLeft / globals.timeLimit);
     if( timeLeft <= 5 && timeLeft > 0 )
     {
       drawCountdown(timeLeft, secondPortion / 1000.0);
     }
   };
+
+
+  var drawStar = function(centerX, centerY, fillOn)
+  {
+    var n = 10;
+    var radius = 150;
+
+    splashCtx.fillStyle = "#ee0";
+
+    for( var j = 0; j < 1 + fillOn ? 1 : 0; j++ )
+    {
+      splashCtx.beginPath();
+      for( var i = 0; i < n; i++ )
+      {
+        var theta = 2.0 * Math.PI * (i-0.5) / n;
+        var factor = [1.0, 0.378][i % 2];
+
+        var x = centerX + factor * radius * Math.cos(theta);
+        var y = centerY + factor * radius * Math.sin(theta);
+
+        if( i == 0 )
+        {
+          splashCtx.moveTo(x, y);
+        }
+        else
+        {
+          splashCtx.lineTo(x, y);
+        }
+      }
+      splashCtx.closePath();
+
+      if( j == 0 )
+      {
+        splashCtx.stroke();
+      }
+      else
+      {
+        splashCtx.fill();
+      }
+    }
+  }
+
+  var renderRewardScreen = function()
+  {
+    var t = Date.now() - rewardScreenTime0;
+
+    splashCtx.clearRect(0, 0, splashCanvas.width, splashCanvas.height);
+
+    var h = 0.0;
+
+    if( t > 0 && t < 1000 )
+    {
+      var x = t/1000.0;
+      h = 2.0 * splashCanvas.height * ( 1.0 - (3.0 * x*x - 2.0 * x*x*x) );
+    }
+
+    if( t > 5000 && t < 6000 )
+    {
+      var x = (t-5000)/1000.0;
+      h = 2.0 * splashCanvas.height * ( 2.0 * x*x*x - 3.0 * x*x );
+    }
+
+    if( t > 6000 )
+    {
+      h = 2.0 * splashCanvas.height;
+    }
+
+    splashCtx.save();
+    splashCtx.translate(0, -h);
+    splashCtx.translate(splashCanvas.width / 2, splashCanvas.height / 2);
+
+    splashCtx.fillStyle = "#aab";
+    splashCtx.fillRect(-600,-300,1200,600);
+
+    splashCtx.strokeStyle = "#334";
+    splashCtx.lineWidth = 10;
+    splashCtx.lineJoin = "round";
+    splashCtx.strokeRect(-600,-300,1200,600);
+
+    var starf0 = (t > 1300);
+    var starf1 = (t > 1600);
+    var starf2 = (t > 1900);
+
+    drawStar(-325,-100, starf0);
+    drawStar(0,-100, starf1);
+    drawStar(325,-100, starf2);
+
+    if( starf2 )
+    {
+      splashCtx.fillStyle = "#000";
+      splashCtx.font = "150px 'Dosis'";
+      splashCtx.textAlign = "center";
+      splashCtx.fillText("Accuracy : " + parseInt(accuracy) + "%", 0,200);
+    }
+
+    splashCtx.restore();
+
+  }
+
   GameSupport.run(globals, render);
 });
 
@@ -577,8 +703,8 @@ URL: https://github.com/Huddle/Resemble.js
             return Math.abs(d1.brightness - d2.brightness) > tolerance.maxBrightness;
         }
 
-        function getHue(r,g,b){
-
+        function getHue(r,g,b)
+        {
             r = r / 255;
             g = g / 255;
             b = b / 255;
