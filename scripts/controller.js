@@ -107,8 +107,9 @@ requirejs([
   };
 
   var colorButtons = document.getElementById("paint-colors").childNodes
-  for (var i = colorButtons.length - 1; i >= 0; i--) {
+  for (var i = colorButtons.length - 1; i > 0; i--) {
     var buttonElem = colorButtons[i];
+    if (buttonElem == undefined) continue;
     FastClick.attach(buttonElem);
     buttonElem.onclick = function () {
       setColor(this.style.backgroundColor);

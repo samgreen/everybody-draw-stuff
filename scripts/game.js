@@ -24,10 +24,11 @@ requirejs([
     sensitivity: 40,
     timeLimit: 120,
     levels: [
+      "images/clean.png",
+      "images/nyan.png",
       "images/smiley.png",
       "images/cardinalgamejam.jpg",
-      "images/apple.jpg",
-      "images/nyan.png"
+      "images/apple.jpg"
     ]
   };
 
