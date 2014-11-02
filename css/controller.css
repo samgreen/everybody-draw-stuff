@@ -28,6 +28,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+@import url(http://fonts.googleapis.com/css?family=Dosis:800);
+body {
+    font-family: 'Dosis';
+}
 #gamearea {
     width: 100%;
     height: 100%;
@@ -56,6 +60,9 @@
 #paint-button {
     height: 40%;
     bottom: 20px;
+    font-family: 'Dosis';
+    font-weight: 800;
+    font-size: 350%;
 }
 #paint-colors {
     width: 90%;
@@ -63,16 +70,66 @@
     margin: auto;
     position: absolute;
     top: 20%;
-    left: 3%;
 }
 #paint-colors button {
-    width: 80px;
+    width: 70px;
     position: relative;
     margin: 2px;
-    height: 80px;
+    height: 70px;
     font-size: 100%;
-    border-radius: 40px;
+    border-radius: 35px;
     border: 1px solid #111;
     background: #de2;
 
+}
+#brush-sizes {
+    width: 90%;
+    height: 15%;
+    position: absolute;
+    top: 8%;
+    left: 18%;   
+}
+#brush-sizes button {
+    position: relative;
+    border: 1px solid #111;
+    background: #de2;
+}
+
+#brush-small {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 2px !important;
+    border-radius: 13px !important;
+    padding-top: 13px;
+    margin: auto;
+}
+
+#brush-medium {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 100% !important;
+    border-radius: 25px !important;
+    margin: auto;
+}
+
+#brush-large {
+    width: 70px !important;
+    height: 70px !important;
+    font-size: 100% !important;
+    border-radius: 35px !important;
+    margin: auto;
+}
+
+input[type=range], ::-moz-range-track, ::-ms-track {
+    -webkit-appearance: none;
+    background-color: 3f91e5;
+    width: 250px;
+    height:20px;
+}
+
+::-webkit-slider-thumb, ::-moz-range-thumb, ::-ms-thumb {
+    -webkit-appearance: none;
+    background-color: #666;
+    width: 10px;
+    height: 20px;
 }

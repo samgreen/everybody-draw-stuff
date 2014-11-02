@@ -90,7 +90,7 @@ requirejs([
 
     this.painting = false;
 
-    this.brushRadius = 15.0;
+    this.brushRadius = 10.0;
 
     this.lastDown = false;
     this.lastScreenX = 0;
