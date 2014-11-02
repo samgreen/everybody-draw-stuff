@@ -209,6 +209,36 @@ requirejs([
     players.push(new Player(netPlayer, name));
   });
 
+
+  function drawClock(clockCanvasCtx, portion)
+  {
+    clockCanvasCtx.fillStyle = "#0ff";
+
+    clockCanvasCtx.beginPath();
+    clockCanvasCtx.moveTo(100,0);
+    clockCanvasCtx.arc(
+        100, 100, 100, -Math.PI / 2, -Math.PI / 2 + 2.0 * Math.PI);
+    clockCanvasCtx.fill();
+
+    clockCanvasCtx.fillStyle = "#00f";
+
+    clockCanvasCtx.beginPath();
+    clockCanvasCtx.moveTo(100,100);
+    clockCanvasCtx.lineTo(100,0);
+    clockCanvasCtx.arc(
+        100, 100, 100, -Math.PI / 2, -Math.PI / 2 + portion * 2.0 * Math.PI);
+    clockCanvasCtx.fill();
+
+    clockCanvasCtx.fillStyle = "#00f";
+
+    clockCanvasCtx.strokeStyle = "#000";
+    clockCanvasCtx.beginPath();
+    clockCanvasCtx.moveTo(100,0);
+    clockCanvasCtx.arc(
+        100, 100, 100, -Math.PI / 2, -Math.PI / 2 + 2.0 * Math.PI);
+    clockCanvasCtx.stroke();
+  }
+
   var render = function()
   {
     overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
@@ -241,6 +271,8 @@ requirejs([
       exemplarCtx.strokeRect(0, 0, exemplarCanvas.width, exemplarCanvas.height);
       needsRedrawImage = false;
     }
+
+    drawClock(exemplarCtx, 0.4);
   };
   GameSupport.run(globals, render);
 });
