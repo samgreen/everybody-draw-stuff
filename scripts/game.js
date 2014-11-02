@@ -17,12 +17,13 @@ requirejs([
   var statsCanvas = document.getElementById("stats");
   var splashCanvas = document.getElementById("splash");
 
+
   var currentLevel = 0;
 
   var players = [];
   var globals = {
     sensitivity: 40,
-    timeLimit: 120,
+    timeLimit: 10,
     levels: [
       "images/smiley.png",
       "images/batman.jpg",
@@ -37,9 +38,19 @@ requirejs([
   {
     ctx.fillStyle = "#ecf0f1";
     ctx.fillRect(0,0, canvas.width, canvas.height);
-    currentLevel = currentLevel % globals.levels.length;
     exemplarImage.src = globals.levels[currentLevel]
+    
+    var savedScore = localStorage[globals.levels[currentLevel]];
+    if (savedScore) {
+      savedScore = savedScore + '%';
+      highScoreElem.innerHTML = "High Score: " + savedScore;
+    } else {
+      highScoreElem.innerHTML = "";
+    }
+    
+
     currentLevel++;
+    currentLevel = currentLevel % globals.levels.length;
   };
 
   function resizeWindow()
@@ -74,6 +85,7 @@ requirejs([
 
   resizeWindow();
 
+  var highScoreElem = document.getElementById("high-score");  
   var exemplarImage = document.getElementById("exemplar-image");
 
   var ctx = canvas.getContext("2d");
@@ -111,7 +123,12 @@ requirejs([
     var diff = resemble(canvas.toDataURL()).compareTo(exemplarCanvas.toDataURL()).onComplete(function(d){
       //console.log("Mismatch: " + d["misMatchPercentage"]);
 
-      accuracy  = 100 - d["misMatchPercentage"];
+      accuracy  = parseInt(100 - d["misMatchPercentage"]);
+      var levelToSave = currentLevel - 1;
+      if (levelToSave < 0) levelToSave = globals.levels.length - 1;
+      if (localStorage[globals.levels[levelToSave]] < accuracy || !localStorage[globals.levels[levelToSave]]) {
+        localStorage[globals.levels[levelToSave]] = accuracy;
+      }
 
       callback(d);
     });
@@ -246,6 +263,11 @@ requirejs([
     players.push(new Player(netPlayer, name));
   });
 
+  var sendTimeLeft = function() {
+    server.broadcastCmd('timeLeft', { timeLeft: timeLeft } );
+  };
+  setInterval(sendTimeLeft, 1000);
+
 
   function drawClock(portion)
   {
@@ -277,6 +299,19 @@ requirejs([
         0, 0, clockRadius, 0, 2.0 * Math.PI);
     statsCtx.closePath();
     statsCtx.stroke();
+
+    // Draw time
+    statsCtx.fillStyle = "rgba(0,0,0,0.5)";
+    statsCtx.textAlign = "center";
+    statsCtx.font = "800 30px 'Dosis'";
+    statsCtx.textAlign = "center";
+    var minutesLeft = Math.floor(timeLeft / 60);
+    var secondsLeft = timeLeft - minutesLeft * 60;
+    if (secondsLeft < 10) {
+      secondsLeft = "0" + secondsLeft.toString();
+    }
+    var timeLeftString = minutesLeft + ":" + secondsLeft;
+    statsCtx.fillText(timeLeftString, 0, 20);
 
     statsCtx.restore();
   }

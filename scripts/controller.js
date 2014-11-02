@@ -53,14 +53,14 @@ requirejs([
       "#2ecc71",
       "#3498db",
       "#9b59b6",
-      "#34495e",
-      "#f1c40f",
+      "#063563",
+      "#f4e749",
       "#e67e22",
       "#e74c3c",
       "#ecf0f1",
       "#95a5a6",
-      "#bdc3c7",
-      "#7f8c8d"
+      "#fd9cfd",
+      "#1d1d1d"
     ],
     randomNames: [
       "Doc",
@@ -133,6 +133,16 @@ requirejs([
     client.sendCmd('brushSize', { brushSize: brushSizes[brushSizeIndex] });
   };
   var client = new GameClient();
+
+  client.addEventListener('timeLeft', function (evt) {
+    console.log("Time left: " + evt.timeLeft);
+    var minutes = Math.floor(evt.timeLeft / 60);
+    var seconds = evt.timeLeft - (minutes * 60);
+    if (seconds < 10) {
+      seconds = "0" + seconds.toString();
+    }
+    statusElem.innerHTML = minutes + ":" + seconds;
+  });
 
   if (window.DeviceOrientationEvent) {
     // Listen for the event and handle DeviceOrientationEvent object
