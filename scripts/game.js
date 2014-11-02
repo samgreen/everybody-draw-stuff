@@ -168,7 +168,7 @@ requirejs([
     });
     netPlayer.addEventListener('accel', function (evt)
     {
-      if( player.busy || !rewardScreen )
+      if( player.busy || rewardScreen )
         return;
 
       var screenX = evt.x / 100.0 - player.centerX;
