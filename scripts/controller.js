@@ -120,7 +120,7 @@ requirejs([
     client.sendCmd('brushSize', { brushSize: brushSizes[brushSizeIndex] });
   };
   document.getElementById("decrease-brush-size").onclick = function (evt) {
-    brushSize -= 1;
+    brushSizeIndex -= 1;
     if (brushSizeIndex < 0) brushSizeIndex = brushSizes.length - 1;
 
     client.sendCmd('brushSize', { brushSize: brushSizes[brushSizeIndex] });

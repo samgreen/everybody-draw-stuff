@@ -67,13 +67,13 @@ body {
 }
 #increase-brush-size {
     width: 48% !important;
-    left: 0% !important;
+    left: 52% !important;
     height: 100% !important;
     font-size: 200% !important;
 }
 #decrease-brush-size {
     width: 48%  !important;
-    left: 52% !important;
+    left: 0% !important;
     height: 100% !important;
     font-size: 200% !important;
 }

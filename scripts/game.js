@@ -67,7 +67,8 @@ requirejs([
     levels: [
       "images/smiley.png",
       "images/cardinalgamejame.jpg",
-      "images/apple.jpg"
+      "images/apple.jpg",
+      "images/nyan.png"
     ]
   };
   Misc.applyUrlSettings(globals);
