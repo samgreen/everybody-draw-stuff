@@ -236,8 +236,6 @@ requirejs([
   var server = new GameServer();
   GameSupport.init(server, globals);
 
-  var goal = new Goal();
-
   // A new player has arrived.
   server.addEventListener('playerconnect', function(netPlayer, name)
   {
