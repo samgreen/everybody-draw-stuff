@@ -109,30 +109,10 @@ requirejs([
 
       accuracy  = 100 - d["misMatchPercentage"];
 
-      var diffImg = new Image();
-      //diffImg.src = d.getImageDataUrl();
-      //document.body.appendChild(diffImg);
-
       callback(d);
     });
     diff.ignoreAntialiasing();
-    //diff.ignoreColors();
-  };
-  // setInterval(compareImages, 30000);
-
-  var Goal = function() {
-      this.pickGoal();
-      this.radiusesSquared = globals.itemSize * 2 * globals.itemSize;
-  };
-
-  Goal.prototype.pickGoal = function() {
-    this.position = pickRandomPosition();
-  };
-
-  Goal.prototype.hit = function(otherPosition) {
-    var dx = otherPosition.x - this.position.x;
-    var dy = otherPosition.y - this.position.y;
-    return dx * dx + dy * dy < this.radiusesSquared;
+    diff.ignoreColors();
   };
 
   var Player = function(netPlayer, name) {
