@@ -91,6 +91,8 @@ requirejs([
   MobileHacks.fixHeightHack();
 
   var score = 0;
+  var brushSizeIndex = 0;
+  var brushSizes = [ 8, 21, 34, 72 ];
   var painting = false;
   var statusElem = document.getElementById("gamestatus");
   var colorElem = document.getElementById("display");
@@ -110,6 +112,19 @@ requirejs([
     };
   };
 
+
+  document.getElementById("increase-brush-size").onclick = function (evt) {
+    brushSizeIndex += 1;
+    if (brushSizeIndex >= brushSizes.length) brushSizeIndex = 0;
+
+    client.sendCmd('brushSize', { brushSize: brushSizes[brushSizeIndex] });
+  };
+  document.getElementById("decrease-brush-size").onclick = function (evt) {
+    brushSize -= 1;
+    if (brushSizeIndex < 0) brushSizeIndex = brushSizes.length - 1;
+
+    client.sendCmd('brushSize', { brushSize: brushSizes[brushSizeIndex] });
+  };
   var client = new GameClient();
 
   if (window.DeviceOrientationEvent) {
