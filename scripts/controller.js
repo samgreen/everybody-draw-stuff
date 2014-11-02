@@ -92,7 +92,7 @@ requirejs([
 
   var score = 0;
   var brushSizeIndex = 0;
-  var brushSizes = [ 8, 21, 34, 72 ];
+  var brushSizes = [ 4, 21, 34, 72 ];
   var painting = false;
   var statusElem = document.getElementById("gamestatus");
   var colorElem = document.getElementById("display");
@@ -101,6 +101,7 @@ requirejs([
   paintButtonElem.onclick = function (evt) {
     painting = !painting;
     paintButtonElem.innerHTML = painting ? 'Stop!' : 'Paint!';
+    paintButtonElem.style.opacity = painting ? '0.33' : '1.0';
     sendPaintDownCmd();
   };
 

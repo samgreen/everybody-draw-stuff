@@ -53,7 +53,6 @@ body {
     left: 5%;
     font-size: 350%;
     color: #eee;
-    background: rgba(0,0,0,40);
     border: 0px solid #111;
     border-radius: 6px;
 }
@@ -66,12 +65,14 @@ body {
     padding: 0;
 }
 #increase-brush-size {
+    background-color: rgba(0,0,0,0.4);
     width: 48% !important;
     left: 52% !important;
     height: 100% !important;
     font-size: 200% !important;
 }
 #decrease-brush-size {
+    background-color: rgba(0,0,0,0.4);
     width: 48%  !important;
     left: 0% !important;
     height: 100% !important;
