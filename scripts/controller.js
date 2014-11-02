@@ -58,26 +58,23 @@ requirejs([
       "#e67e22",
       "#e74c3c",
       "#ecf0f1",
-      "#95a5a6"
+      "#95a5a6",
+      "#bdc3c7",
+      "#7f8c8d"
     ]
   };
   Misc.applyUrlSettings(globals);
   MobileHacks.fixHeightHack();
 
   var score = 0;
+  var painting = false;
   var statusElem = document.getElementById("gamestatus");
   var colorElem = document.getElementById("display");
 
   var paintButtonElem = document.getElementById("paint-button");
-  paintButtonElem.onpointerdown = function (evt) {
-    sendPaintDownCmd();
-  };
-
-  paintButtonElem.onpointerup = function (evt) {
-    sendPaintUpCmd();
-  };
-
   paintButtonElem.onclick = function (evt) {
+    painting = !painting;
+    paintButtonElem.innerHTML = painting ? 'Stop!' : 'Paint!';
     sendPaintDownCmd();
   };
 
@@ -85,11 +82,7 @@ requirejs([
   for (var i = colorButtons.length - 1; i >= 0; i--) {
     var buttonElem = colorButtons[i];
     buttonElem.onclick = function () {
-      paintButtonElem.style.backgroundColor = this.style.backgroundColor;
-      client.sendCmd('color', {
-        // Pick a random color
-        color: this.style.backgroundColor,
-      });
+      setColor(this.style.backgroundColor);
     };
   };
 
@@ -132,11 +125,6 @@ requirejs([
     client.sendCmd('paintdown');
   };
 
-  var sendCalibrate = function () {
-    client.sendCmd('calibrate');
-  };
-
-
   var randInt = function(range) {
     return Math.floor(Math.random() * range);
   };
@@ -149,11 +137,14 @@ requirejs([
   //
   // This will generate a 'color' event in the corresponding
   // NetPlayer object in the game.
-  var c = getRandomColor();
-  client.sendCmd('color', {
-    // Pick a random color
-    color: c,
-  });
-  paintButtonElem.style.backgroundColor = c;
+  var setColor = function (color) {
+    client.sendCmd('color', {
+      // Pick a random color
+      color: color,
+    });
+    paintButtonElem.style.backgroundColor = color;
+  };
+
+  setColor(getRandomColor());
 });
 
