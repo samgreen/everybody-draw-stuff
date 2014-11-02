@@ -248,6 +248,23 @@ requirejs([
     overlayCtx.fillText("" + count, overlayCanvas.width/2, (1.0 - 0.5 *portion) * overlayCanvas.height);
   }
 
+  function drawBrush(player)
+  {
+      var n = 8;
+      for( var i = 0; i < n; i++ )
+      {
+        overlayCtx.strokeStyle = ["#000", "#fff"][i % 2];
+
+        overlayCtx.lineWidth = 1;
+        overlayCtx.beginPath();
+
+        overlayCtx.arc(
+          player.lastScreenX, player.lastScreenY,
+          player.brushRadius, 2 * Math.PI * (i-0.5) / n, 2 * Math.PI * (i+0.5) / n);
+        overlayCtx.stroke();
+      }
+  }
+
   var lastTime = 0;
   var timeLeft = 10;
 
@@ -273,15 +290,9 @@ requirejs([
     {
       var player = players[i];
 
-      overlayCtx.strokeStyle = player.color;
-      overlayCtx.lineWidth = 2;
-      overlayCtx.beginPath();
-      overlayCtx.arc(
-        player.lastScreenX, player.lastScreenY,
-        player.brushRadius, 0, Math.PI * 2);
-      overlayCtx.closePath();
-      overlayCtx.stroke();
+      drawBrush(player);
 
+      overlayCtx.fillStyle = "#000";
       overlayCtx.lineWidth = 1;
       overlayCtx.textAlign = "center";
       overlayCtx.font = "800 20px 'Dosis'";
