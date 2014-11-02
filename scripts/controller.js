@@ -67,7 +67,6 @@ requirejs([
   var score = 0;
   var statusElem = document.getElementById("gamestatus");
   var colorElem = document.getElementById("display");
-  var colorButtons = document.getElementById("paint-colors").childNodes;
 
   var paintButtonElem = document.getElementById("paint-button");
   paintButtonElem.onpointerdown = function (evt) {
@@ -80,6 +79,18 @@ requirejs([
 
   paintButtonElem.onclick = function (evt) {
     sendPaintDownCmd();
+  };
+
+  var colorButtons = document.getElementById("paint-colors").childNodes
+  for (var i = colorButtons.length - 1; i >= 0; i--) {
+    var buttonElem = colorButtons[i];
+    buttonElem.onclick = function () {
+      paintButtonElem.style.backgroundColor = this.style.backgroundColor;
+      client.sendCmd('color', {
+        // Pick a random color
+        color: this.style.backgroundColor,
+      });
+    };
   };
 
   var client = new GameClient();
