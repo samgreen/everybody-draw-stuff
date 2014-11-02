@@ -290,11 +290,12 @@ requirejs([
 
   function drawCountdown(count, portion)
   {
-    overlayCtx.fillStyle = "#05f";
-    overlayCtx.textAlign = "center";
-    overlayCtx.font = "800 " + parseInt((1.0 - portion) * 1000) + "px 'Dosis'";
-    overlayCtx.textAlign = "center";
-    overlayCtx.fillText("" + count, overlayCanvas.width/2, (1.0 - 0.5 *portion) * overlayCanvas.height);
+    splashCtx.clearRect(0,0,splashCanvas.width, splashCanvas.height);
+    splashCtx.fillStyle = "#05f";
+    splashCtx.textAlign = "center";
+    splashCtx.font = "800 " + parseInt((1.0 - portion) * 1000) + "px 'Dosis'";
+    splashCtx.textAlign = "center";
+    splashCtx.fillText("" + count, overlayCanvas.width/2, (1.0 - 0.5 *portion) * overlayCanvas.height);
   }
 
   function drawBrush(player)
@@ -342,8 +343,9 @@ requirejs([
     if( secondPortion > 1000 )
     {
         timeLeft--;
-        if( timeLeft <= 0 )
+        if( timeLeft < 0 )
         {
+          splashCtx.clearRect(0,0,splashCanvas.width, splashCanvas.height);
           startRewardScreen();
           timeLeft = 0;
         }
