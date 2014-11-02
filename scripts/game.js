@@ -241,7 +241,7 @@ requirejs([
 
   function drawCountdown(count, portion)
   {
-    overlayCtx.fillColor = "#0ff";
+    overlayCtx.fillStyle = "#05f";
     overlayCtx.textAlign = "center";
     overlayCtx.font = "800 " + parseInt((1.0 - portion) * 1000) + "px 'Dosis'";
     overlayCtx.textAlign = "center";
@@ -249,7 +249,7 @@ requirejs([
   }
 
   var lastTime = 0;
-  var timeLeft = 60;
+  var timeLeft = 10;
 
   var render = function()
   {
