@@ -63,7 +63,12 @@ requirejs([
 
   var players = [];
   var globals = {
-    sensitivity: 40
+    sensitivity: 40,
+    levels: [
+      "images/smiley.png",
+      "images/cardinalgamejame.jpg",
+      "images/apple.jpg"
+    ]
   };
   Misc.applyUrlSettings(globals);
 
